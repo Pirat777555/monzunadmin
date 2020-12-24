@@ -1,0 +1,318 @@
+<template>
+    <div class="main">
+        <div class="row">
+            <div class="col-12 admin d-flex">
+                <div class="avatar">
+                    <img src="/images/avatar.png" alt="" />
+                </div>
+                <div class="name">Максим Белоусов</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-lg-6 control-tracker">
+                <div class="users">Все пользователи</div>
+
+                <b-modal
+                    centered
+                    hide-header
+                    ok-title="Добавить"
+                    cancel-title="Отмена"
+                    id="modal-1"
+                    @ok="addUser"
+                >
+                    <div class="add-tracker">
+                        <div class="tracker">
+                            <div class="text">Добавление трекера</div>
+                            <div>
+                                <div>
+                                    <img
+                                        src="/images/noname.jpg"
+                                        alt=""
+                                        class="avatar mb-2"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <form>
+                            <div class="name">
+                                <div class="text-form">ФИО</div>
+                                <input type="text" v-model="newUser.login" />
+                            </div>
+                            <div class="telephone">
+                                <div class="text-form">Номер телефона</div>
+                                <input type="tel" v-model="newUser.telephone" />
+                            </div>
+                            <div class="email">
+                                <div class="text-form">Электронная почта</div>
+                                <input type="email" v-model="newUser.email" />
+                            </div>
+                        </form>
+                        <div class="close" @click="closeModal1">
+                            <img src="/images/close-modal.svg" alt="" />
+                        </div>
+                    </div>
+                </b-modal>
+                <b-modal
+                    centered
+                    hide-header
+                    ok-title="Изменить"
+                    cancel-title="Отмена"
+                    id="modal-2"
+                >
+                    <div class="add-tracker">
+                        <div class="tracker">
+                            <div class="text">Редактирование</div>
+                            <div class="avatar">
+                                <img src="/images/photo.png" alt="" />
+                            </div>
+                        </div>
+                        <form class="d-flex justify-content-between">
+                            <div class="info">
+                                <div class="name">
+                                    <div class="text-form">ФИО</div>
+                                    <input type="text" :value="users.name" />
+                                </div>
+                                <div class="telephone">
+                                    <div class="text-form">Номер телефона</div>
+                                    <input type="tel" />
+                                </div>
+                                <div class="email">
+                                    <div class="text-form">
+                                        Электронная почта
+                                    </div>
+                                    <input type="email" />
+                                </div>
+                            </div>
+                            <div class="block">
+                                <div class="user-block d-flex mb-5">
+                                    <div class="text-form">
+                                        Блокирование пользователя
+                                    </div>
+                                    <div class="check-block">
+                                        <img
+                                            src="/images/block.png"
+                                            alt=""
+                                            v-if="users.isBlock"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="matter">
+                                    <div class="text-form">
+                                        Причина блокировки
+                                    </div>
+                                    <textarea
+                                        name=""
+                                        id=""
+                                        cols="40"
+                                        rows="8"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="close" @click="closeModal2">
+                            <img src="/images/close-modal.svg" alt="" />
+                        </div>
+                    </div>
+                </b-modal>
+            </div>
+            <div class="col-12 col-lg-6">
+                <b-button class="btn btn-add" v-b-modal.modal-1>
+                    Добавить трекера </b-button
+                >
+            </div>
+        </div>
+        <div class="row">
+            <User
+                v-for="(user, index) in users"
+                :key="index"
+                :login="user.login"
+                :photo="user.photo"
+            ></User>
+        </div>
+    </div>
+</template>
+
+<script>
+import User from "~/components/user.vue";
+export default {
+    name: "index",
+    components: { User },
+    data: function () {
+        return {
+            newUser: {},
+            files: [],
+            users: [
+                {
+                    id: 1,
+                    name: "Фамилия Имя",
+                    login: "user 1",
+                    photo: "/images/noname.jpg",
+                    telephone: "89226378232",
+                    email: "email@mail.ru",
+                    isBlock: true,
+                },
+                {
+                    name: "Фамилия Имя2",
+                    login: "user 2",
+                    photo: "/images/noname.jpg",
+                    telephone: "89226378232",
+                    email: "email@mail.ru",
+                    isBlock: false,
+                },
+                {
+                    name: "Фамилия Имя3",
+                    login: "user 3",
+                    photo: "/images/noname.jpg",
+                    telephone: "89226378232",
+                    email: "email@mail.ru",
+                    isBlock: false,
+                },
+                {
+                    name: "Фамилия Имя4",
+                    login: "user 4",
+                    photo: "/images/noname.jpg",
+                    telephone: "89226378232",
+                    email: "email@mail.ru",
+                    isBlock: false,
+                },
+                {
+                    name: "Фамилия Имя5",
+                    login: "user 5",
+                    photo: "/images/noname.jpg",
+                    telephone: "89226378232",
+                    email: "email@mail.ru",
+                    isBlock: false,
+                },
+                {
+                    name: "Фамилия Имя6",
+                    login: "user 6",
+                    photo: "/images/noname.jpg",
+                    telephone: "89226378232",
+                    email: "email@mail.ru",
+                    isBlock: false,
+                },
+            ],
+        };
+    },
+    methods: {
+        closeModal1() {
+            this.$bvModal.hide("modal-1");
+        },
+        closeModal2() {
+            this.$bvModal.hide("modal-2");
+        },
+        addUser() {
+            this.users.push(this.newUser);
+            this.newUser = {};
+        },
+    },
+};
+</script>
+
+<style>
+.main {
+    margin-top: 30px;
+}
+.name {
+    font-family: Futura PT;
+    font-size: 18px;
+    line-height: 115%;
+
+    color: #77797d;
+}
+.admin {
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 90px;
+}
+.admin .avatar {
+    margin-right: 10px;
+}
+.control-tracker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+}
+.control-tracker .users {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 120%;
+    letter-spacing: -0.03em;
+    color: #333333;
+}
+.btn-add {
+    background: #106466;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    padding: 13px 25px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    color: #ffffff;
+    border-radius: 0 !important;
+}
+.tracker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+.add-tracker .text {
+    font-family: Roboto;
+    font-size: 20px;
+    line-height: 21px;
+    display: flex;
+    align-items: center;
+
+    color: #000000;
+}
+.add-tracker .avatar {
+    width: 120px;
+    height: 120px;
+    background: #c4c4c4;
+    border: 1px solid #000000;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.add-tracker .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.add-tracker .avatar img {
+    width: 100%;
+}
+form .text-form {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 16px;
+    color: #000000;
+    margin-bottom: 10px;
+}
+form input {
+    width: 100%;
+    margin-bottom: 50px;
+    padding: 10px;
+}
+.user-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.check-block {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #000000;
+    margin-left: 10px;
+    text-align: center;
+}
+</style>
