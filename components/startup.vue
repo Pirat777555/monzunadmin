@@ -2,7 +2,11 @@
     <div class="col-12 col-lg-3 mb-3">
         <div class="user">
             <div class="edit">
-                <b-button class="delete" v-b-modal.modal-delete>
+                <b-button
+                    class="delete"
+                    v-b-modal.modal-delete
+                    @click="$router.push({ query: { id: id } })"
+                >
                     <img src="/images/delete.svg" alt=""
                 /></b-button>
             </div>
@@ -10,7 +14,11 @@
                 <img :src="photo" alt="" />
             </div>
             <div class="user-login">{{ name }}</div>
-            <b-button class="details" v-b-modal.modal-2>
+            <b-button
+                class="details"
+                v-b-modal.modal-2
+                @click="$router.push({ query: { id: id } })"
+            >
                 Подробнее <img src="/images/arrow.svg" alt=""
             /></b-button>
         </div>
@@ -20,6 +28,10 @@
 export default {
     name: "startup",
     props: {
+        id: {
+            type: Number,
+            default: null,
+        },
         name: {
             type: String,
             default: "",

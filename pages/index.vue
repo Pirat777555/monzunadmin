@@ -9,8 +9,11 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 col-lg-6 control-tracker">
+            <div class="col-12 col-lg-12 control-tracker">
                 <div class="users">Все пользователи</div>
+                <b-button class="btn btn-add" v-b-modal.modal-1>
+                    Добавить трекера</b-button
+                >
 
                 <b-modal
                     centered
@@ -47,7 +50,7 @@
                                 <input type="email" v-model="newUser.email" />
                             </div>
                         </form>
-                        <div class="close" @click="closeModal1">
+                        <div class="close" @click="$bvModal.hide('modal-1')">
                             <img src="/images/close-modal.svg" alt="" />
                         </div>
                     </div>
@@ -55,13 +58,14 @@
                 <b-modal
                     centered
                     hide-header
-                    ok-title="Изменить"
-                    cancel-title="Отмена"
+                    ok-only
+                    ok-title="Ок"
                     id="modal-2"
+                    @hidden="$router.push({ query })"
                 >
                     <div class="add-tracker">
                         <div class="tracker">
-                            <div class="text">Редактирование</div>
+                            <div class="text">Просмотр</div>
                             <div class="avatar">
                                 <img src="/images/photo.png" alt="" />
                             </div>
@@ -70,17 +74,29 @@
                             <div class="info">
                                 <div class="name">
                                     <div class="text-form">ФИО</div>
-                                    <input type="text" :value="users.name" />
+                                    <input
+                                        type="text"
+                                        v-model="activeUser.name"
+                                        readonly
+                                    />
                                 </div>
                                 <div class="telephone">
                                     <div class="text-form">Номер телефона</div>
-                                    <input type="tel" />
+                                    <input
+                                        type="tel"
+                                        v-model="activeUser.telephone"
+                                        readonly
+                                    />
                                 </div>
                                 <div class="email">
                                     <div class="text-form">
                                         Электронная почта
                                     </div>
-                                    <input type="email" />
+                                    <input
+                                        type="email"
+                                        v-model="activeUser.email"
+                                        readonly
+                                    />
                                 </div>
                             </div>
                             <div class="block">
@@ -92,7 +108,7 @@
                                         <img
                                             src="/images/block.png"
                                             alt=""
-                                            v-if="users.isBlock"
+                                            v-if="activeUser.isBlock"
                                         />
                                     </div>
                                 </div>
@@ -105,20 +121,118 @@
                                         id=""
                                         cols="40"
                                         rows="8"
+                                        v-model="activeUser.reasonBlock"
+                                        readonly
                                     ></textarea>
                                 </div>
                             </div>
                         </form>
-                        <div class="close" @click="closeModal2">
+                        <div class="close" @click="$bvModal.hide('modal-2')">
                             <img src="/images/close-modal.svg" alt="" />
                         </div>
                     </div>
                 </b-modal>
+                <b-modal
+                    centered
+                    hide-header
+                    ok-title="Изменить"
+                    cancel-title="Отмена"
+                    id="modal-3"
+                    @hidden="$router.push({ query })"
+                >
+                    <div class="add-tracker">
+                        <div class="tracker">
+                            <div class="text">Редактирование</div>
+                            <div class="avatar">
+                                <img src="/images/photo.png" alt="" />
+                            </div>
+                        </div>
+                        <form class="d-flex justify-content-between">
+                            <div class="info">
+                                <div class="name">
+                                    <div class="text-form">ФИО</div>
+                                    <input
+                                        type="text"
+                                        v-model="activeUser.name"
+                                    />
+                                </div>
+                                <div class="telephone">
+                                    <div class="text-form">Номер телефона</div>
+                                    <input
+                                        type="tel"
+                                        v-model="activeUser.telephone"
+                                    />
+                                </div>
+                                <div class="email">
+                                    <div class="text-form">
+                                        Электронная почта
+                                    </div>
+                                    <input
+                                        type="email"
+                                        v-model="activeUser.email"
+                                    />
+                                </div>
+                            </div>
+                            <div class="block">
+                                <div class="user-block d-flex mb-5">
+                                    <div class="text-form">
+                                        Блокирование пользователя
+                                    </div>
+                                    <div class="check-block">
+                                        <img
+                                            src="/images/block.png"
+                                            alt=""
+                                            v-if="activeUser.isBlock"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="matter">
+                                    <div class="text-form">
+                                        Причина блокировки
+                                    </div>
+                                    <textarea
+                                        name=""
+                                        id=""
+                                        cols="40"
+                                        rows="8"
+                                        v-model="activeUser.reasonBlock"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="close" @click="$bvModal.hide('modal-3')">
+                            <img src="/images/close-modal.svg" alt="" />
+                        </div>
+                    </div>
+                </b-modal>
+<<<<<<< HEAD
             </div>
             <div class="col-12 col-lg-6">
                 <b-button class="btn btn-add" v-b-modal.modal-1>
                     Добавить трекера </b-button
+=======
+                <b-modal
+                    centered
+                    hide-header
+                    ok-title="Да"
+                    cancel-title="Нет"
+                    id="modal-delete"
+                    @hidden="$router.push({ query })"
+                    @ok="deleteUser($route.query.id)"
+>>>>>>> 96316dc0a8632fac194c2dc66c2f813c8a6df214
                 >
+                    <div class="delete-tracker">
+                        <div class="text">
+                            Вы действительно хотите удалить ?
+                        </div>
+                        <div
+                            class="close"
+                            @click="$bvModal.hide('modal-delete')"
+                        >
+                            <img src="/images/close-modal.svg" alt="" />
+                        </div>
+                    </div>
+                </b-modal>
             </div>
         </div>
         <div class="row">
@@ -127,6 +241,9 @@
                 :key="index"
                 :login="user.login"
                 :photo="user.photo"
+                :id="user.id"
+                :isBlock="user.isBlock"
+                :reasonBlock="user.reasonBlock"
             ></User>
         </div>
     </div>
@@ -139,7 +256,18 @@ export default {
     components: { User },
     data: function () {
         return {
+            activeUser: {
+                id: null,
+                name: "fdsfs",
+                login: "dfsfs",
+                photo: "dfsd",
+                telephone: "dsfds",
+                email: "dfsd",
+                isBlock: true,
+                reasonBlock: "egfwegsgvsdvsdvevbewbvs4rh",
+            },
             newUser: {},
+            activeIndex: {},
             files: [],
             users: [
                 {
@@ -150,62 +278,80 @@ export default {
                     telephone: "89226378232",
                     email: "email@mail.ru",
                     isBlock: true,
+                    reasonBlock: "dfewfsafsa",
                 },
                 {
+                    id: 2,
                     name: "Фамилия Имя2",
                     login: "user 2",
                     photo: "/images/noname.jpg",
                     telephone: "89226378232",
                     email: "email@mail.ru",
                     isBlock: false,
+                    reasonBlock: "",
                 },
                 {
+                    id: 3,
                     name: "Фамилия Имя3",
                     login: "user 3",
                     photo: "/images/noname.jpg",
                     telephone: "89226378232",
                     email: "email@mail.ru",
                     isBlock: false,
+                    reasonBlock: "",
                 },
                 {
+                    id: 4,
                     name: "Фамилия Имя4",
                     login: "user 4",
                     photo: "/images/noname.jpg",
                     telephone: "89226378232",
                     email: "email@mail.ru",
-                    isBlock: false,
+                    isBlock: true,
+                    reasonBlock: "dfewfsafsa",
                 },
                 {
+                    id: 53,
                     name: "Фамилия Имя5",
                     login: "user 5",
                     photo: "/images/noname.jpg",
                     telephone: "89226378232",
                     email: "email@mail.ru",
                     isBlock: false,
+                    reasonBlock: "",
                 },
                 {
+                    id: 67,
                     name: "Фамилия Имя6",
                     login: "user 6",
                     photo: "/images/noname.jpg",
                     telephone: "89226378232",
                     email: "email@mail.ru",
                     isBlock: false,
+                    reasonBlock: "",
                 },
             ],
         };
     },
     methods: {
-        closeModal1() {
-            this.$bvModal.hide("modal-1");
-        },
-        closeModal2() {
-            this.$bvModal.hide("modal-2");
-        },
         addUser() {
             this.users.push(this.newUser);
             this.newUser = {};
         },
+        deleteUser(index) {
+            this.users.forEach((value, item) =>
+                value.id == index ? this.users.splice(item, 1) : null
+            );
+        },
     },
+    // mounted() {
+    //     this.$axios.method
+    //         .get("https://api.coindesk.com/v1/bpi/currentprice.json")
+    //         .then((response) => (this.users = response))
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // },
 };
 </script>
 
@@ -273,6 +419,15 @@ export default {
 
     color: #000000;
 }
+.delete-tracker .text {
+    font-family: Roboto;
+    font-size: 20px;
+    line-height: 21px;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
 .add-tracker .avatar {
     width: 120px;
     height: 120px;
@@ -282,6 +437,11 @@ export default {
     overflow: hidden;
 }
 .add-tracker .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.delete-tracker .close {
     position: absolute;
     top: 10px;
     right: 10px;

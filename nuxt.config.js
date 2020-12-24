@@ -27,11 +27,20 @@ export default {
   buildModules: [
   ],
 
+
+
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
+    '@nuxtjs/axios',
   ],
+  axios: {
+    // extra config e.gbaseURL: process.env.API_URL,
+    // BaseURL: 'https://link-to-API'
+    baseURL: process.env.API_URL,
+
+  },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {

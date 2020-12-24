@@ -2,10 +2,18 @@
     <div class="col-12 col-lg-3 mb-3">
         <div class="user">
             <div class="edit">
-                <b-button class="change" v-b-modal.modal-1>
+                <b-button
+                    class="change"
+                    v-b-modal.modal-2
+                    @click="$router.push({ query: { id: id } })"
+                >
                     <img src="/images/edit.svg" alt=""
                 /></b-button>
-                <b-button class="delete" v-b-modal.modal-delete>
+                <b-button
+                    class="delete"
+                    v-b-modal.modal-delete
+                    @click="$router.push({ query: { id: id } })"
+                >
                     <img src="/images/delete.svg" alt=""
                 /></b-button>
             </div>
@@ -13,10 +21,11 @@
                 <img :src="photo" alt="" />
             </div>
             <div class="user-login">{{ name }}</div>
-            <button class="details">
-                <a href="/view">
-                    Подробнее <img src="/images/arrow.svg" alt=""
-                /></a>
+            <button
+                class="details"
+                @click.prevent="$router.push('/sets/' + id)"
+            >
+                <a href=""> Подробнее <img src="/images/arrow.svg" alt="" /></a>
             </button>
         </div>
     </div>
@@ -26,6 +35,10 @@
 export default {
     name: "user",
     props: {
+        id: {
+            type: Number,
+            default: null,
+        },
         name: {
             type: String,
             default: "",
@@ -46,6 +59,14 @@ export default {
             type: String,
             default: "",
         },
+        active: {
+            type: Boolean,
+            default: true,
+        },
+        startups: {
+            type: Array,
+            default: {},
+        },
     },
 };
 </script>
@@ -56,6 +77,7 @@ export default {
     background: #3a3a3a;
     padding: 10px;
     text-align: left;
+    height: 100%;
 }
 .user:hover .edit {
     opacity: 1;

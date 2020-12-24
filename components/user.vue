@@ -2,10 +2,14 @@
     <div class="col-12 col-lg-3 mb-3">
         <div class="user">
             <div class="edit">
-                <b-button class="change" v-b-modal.modal-2>
+                <b-button class="change" v-b-modal.modal-3>
                     <img src="/images/edit.svg" alt=""
                 /></b-button>
-                <b-button class="delete" v-b-modal.modal-delete>
+                <b-button
+                    class="delete"
+                    v-b-modal.modal-delete
+                    @click="$router.push({ query: { id: id } })"
+                >
                     <img src="/images/delete.svg" alt=""
                 /></b-button>
             </div>
@@ -13,7 +17,11 @@
                 <img :src="photo" alt="" />
             </div>
             <div class="user-login">{{ login }}</div>
-            <b-button class="details" v-b-modal.modal-2>
+            <b-button
+                class="details"
+                v-b-modal.modal-2
+                @click="$router.push({ query: { id: id } })"
+            >
                 Подробнее <img src="/images/arrow.svg" alt=""
             /></b-button>
         </div>
@@ -93,6 +101,10 @@
 export default {
     name: "user",
     props: {
+        id: {
+            type: Number,
+            default: null,
+        },
         name: {
             type: String,
             default: "",
@@ -103,7 +115,7 @@ export default {
         },
         photo: {
             type: String,
-            default: "",
+            default: "/images/noname.jpg",
         },
         telephone: {
             type: String,
@@ -116,6 +128,10 @@ export default {
         isBlock: {
             type: Boolean,
             default: true,
+        },
+        reasonBlock: {
+            type: String,
+            default: "",
         },
     },
 };

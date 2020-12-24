@@ -19,49 +19,71 @@
                 :key="index"
                 :name="startup.name"
                 :photo="startup.photo"
+                :id="startup.id"
             ></Startup>
         </div>
-        <b-modal centered hide-header ok-only ok-title="Готово" id="modal-2">
+        <b-modal
+            centered
+            hide-header
+            ok-only
+            ok-title="Готово"
+            id="modal-2"
+            @hidden="$router.push({ query })"
+        >
             <div class="add-tracker">
                 <div class="tracker">
                     <div class="text">Просмотр стартапа</div>
                     <div class="avatar">
-                        <img src="/images/startup1.png" alt="" />
+                        <img :src="activeStartup.photo" alt="" />
                     </div>
                 </div>
                 <form class="d-flex justify-content-between">
                     <div class="info">
                         <div class="name">
                             <div class="text-form">Имя</div>
-                            <div class="text-info"></div>
+                            <div class="text-info">
+                                {{ activeStartup.name }}
+                            </div>
                         </div>
                         <div class="own">
                             <div class="text-form">Кому пренадлежит</div>
-                            <div class="text-info"></div>
+                            <div class="text-info">{{ activeStartup.own }}</div>
                         </div>
                         <div class="description">
                             <div class="text-form">Описание</div>
-                            <div class="text-info"></div>
+                            <div class="text-info">
+                                {{ activeStartup.description }}
+                            </div>
                         </div>
                         <div class="target">
                             <div class="text-form">Цели стартапа</div>
-                            <div class="text-info"></div>
+                            <div class="text-info">
+                                {{ activeStartup.target }}
+                            </div>
                         </div>
                         <div class="plan-commercial">
                             <div class="text-form">Коммерческий план</div>
-                            <div class="text-info"></div>
+                            <div class="text-info">
+                                {{ activeStartup.plancommercial }}
+                            </div>
                         </div>
                         <div class="plan-grow">
                             <div class="text-form">План роста</div>
-                            <div class="text-info"></div>
+                            <div class="text-info">
+                                {{ activeStartup.planGrow }}
+                            </div>
                         </div>
                         <div class="area">
                             <div class="text-form">Область применения</div>
-                            <div class="text-info"></div>
+                            <div class="text-info">
+                                {{ activeStartup.area }}
+                            </div>
                         </div>
                         <div class="tasks">
                             <div class="text-form">Задачи</div>
-                            <div class="text-info"></div>
+                            <div class="text-info">
+                                {{ activeStartup.tasks }}
+                            </div>
                         </div>
                     </div>
                     <div class="block">
@@ -70,7 +92,24 @@
                         </div>
                     </div>
                 </form>
-                <div class="close" @click="closeModal2">
+                <div class="close" @click="$bvModal.hide('modal-2')">
+                    <img src="/images/close-modal.svg" alt="" />
+                </div>
+            </div>
+        </b-modal>
+        <b-modal
+            centered
+            hide-header
+            ok-title="Да"
+            cancel-title="Нет"
+            id="modal-delete"
+            @hidden="$router.push({ query })"
+            @ok="deleteStartup($route.query.id)"
+        >
+            <div class="delete-tracker">
+                <div class="text">Вы действительно хотите удалить ?</div>
+
+                <div class="close" @click="$bvModal.hide('modal-delete')">
                     <img src="/images/close-modal.svg" alt="" />
                 </div>
             </div>
@@ -85,28 +124,67 @@ export default {
     components: { Startup },
     data: function () {
         return {
+            activeStartup: {
+                id: 1,
+                name: "Цифровой баян",
+                photo: "/images/startup1.png",
+                own: "dfsdfd",
+                description: "dsfdsf",
+                target: "sdfsd",
+                plancommercial: "dsfsd",
+                planGrow: "dsfsd",
+                area: "sdfds",
+                tasks: "sfsd",
+            },
             startups: [
                 {
+                    id: 1,
                     name: "Цифровой баян",
                     photo: "/images/startup1.png",
+                    own: "dfsdfd",
+                    description: "dsfdsf",
+                    target: "sdfsd",
+                    plancommercial: "dsfsd",
+                    planGrow: "dsfsd",
+                    area: "sdfds",
+                    tasks: "sfsd",
                 },
                 {
+                    id: 32,
                     name: "Цифровой баян1",
                     photo: "/images/startup1.png",
+                    own: "dfsdfd",
+                    description: "dsfdsf",
+                    target: "sdfsd",
+                    plancommercial: "dsfsd",
+                    planGrow: "dsfsd",
+                    area: "sdfds",
+                    tasks: "sfsd",
                 },
                 {
+                    id: 4,
                     name: "Цифровой баян2",
                     photo: "/images/startup1.png",
+                    own: "dfsdfd",
+                    description: "dsfdsf",
+                    target: "sdfsd",
+                    plancommercial: "dsfsd",
+                    planGrow: "dsfsd",
+                    area: "sdfds",
+                    tasks: "sfsd",
                 },
                 {
+                    id: 51,
                     name: "Цифровой баян3",
                     photo: "/images/startup1.png",
                 },
                 {
+                    id: 55,
                     name: "Цифровой баян4",
                     photo: "/images/startup1.png",
                 },
                 {
+                    id: 54,
                     name: "Цифровой баян5",
                     photo: "/images/startup1.png",
                 },
@@ -114,11 +192,10 @@ export default {
         };
     },
     methods: {
-        closeModal1() {
-            this.$bvModal.hide("modal-1");
-        },
-        closeModal2() {
-            this.$bvModal.hide("modal-2");
+        deleteStartup(index) {
+            this.startups.forEach((value, item) =>
+                value.id == index ? this.startups.splice(item, 1) : null
+            );
         },
     },
 };
@@ -240,5 +317,19 @@ form {
     padding: 10px;
     margin-bottom: 30px;
     width: 100%;
+}
+.delete-tracker .text {
+    font-family: Roboto;
+    font-size: 20px;
+    line-height: 21px;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+.delete-tracker .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 </style>

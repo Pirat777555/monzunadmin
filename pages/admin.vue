@@ -22,7 +22,9 @@
                 />
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-default">Вход</button>
+                <button type="submit" class="btn btn-default">
+                    <a href="/"> Вход</a>
+                </button>
                 <div class="forgot-password">Забыли пароль?</div>
             </div>
         </form>
@@ -68,7 +70,7 @@ export default {
     margin-top: 30px;
     text-align: center;
 }
-.btn-default {
+.btn-default a {
     background: #106466;
     border-radius: 5px;
     font-family: Roboto;
@@ -79,7 +81,7 @@ export default {
     display: flex;
     align-items: center;
     text-align: center;
-
+    text-decoration: none;
     color: #ffffff;
     padding: 10px 37px;
     margin: auto;
