@@ -7,7 +7,7 @@
                 <div class="text-form">Электронная почта</div>
                 <input type="email" class="form-control" id="inputEmail" />
             </div>
-            <div class="form-group help">
+            <div class="form-group ">
                 <div class="text-form">Пароль</div>
                 <input
                     type="password"
