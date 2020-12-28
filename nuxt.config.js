@@ -12,6 +12,7 @@ export default {
     ]
   },
 
+  target: 'static',   router: {     base: '/monzunadmin/'   },
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
   ],
