@@ -1,13 +1,6 @@
 <template>
     <div class="view-set">
-        <div class="row">
-            <div class="col-12 admin d-flex">
-                <div class="avatar">
-                    <img src="/images/avatar.png" alt="" />
-                </div>
-                <div class="name">Максим Белоусов</div>
-            </div>
-        </div>
+        <Admin></Admin>
         <div class="row">
             <div class="col-12 d-flex justify-content-end">
                 <button class="btn-back" @click.prevent="$router.push('/sets')">
@@ -53,8 +46,23 @@
             <div class="col-lg-12">
                 <table class="table table-bordered">
                     <tbody>
-                        <tr v-for="index in activeSet.startup" :key="index">
-                            <th scope="row">{{ index.name }}</th>
+                        <tr
+                            v-for="(set, index) in activeSet.startup"
+                            :key="index"
+                        >
+                            <th scope="row">
+                                <b-button
+                                    class="startup"
+                                    v-b-modal.modal-startup
+                                    @click="
+                                        $router.push({
+                                            query: { id: activeStartup.id },
+                                        })
+                                    "
+                                >
+                                    {{ set.name }}</b-button
+                                >
+                            </th>
                             <td>
                                 <button
                                     type="button"
@@ -87,7 +95,7 @@
                     ok-title="Да"
                     cancel-title="Нет"
                     id="modal-delete"
-                    @hidden="$router.push({ query })"
+                    @hidden="$router.push({ query: {} })"
                 >
                     <div class="delete-tracker">
                         <div class="text">
@@ -101,6 +109,94 @@
                         </div>
                     </div>
                 </b-modal>
+                <b-modal
+                    centered
+                    hide-header
+                    ok-only
+                    ok-title="Готово"
+                    id="modal-startup"
+                    @hidden="$router.push({ query })"
+                >
+                    <div class="add-tracker">
+                        <div class="tracker">
+                            <div class="text">Просмотр стартапаzcxzcxzcx</div>
+                            <div class="avatar">
+                                <img :src="activeStartup.photo" alt="" />
+                            </div>
+                        </div>
+                        <form class="d-flex justify-content-between">
+                            <div class="info">
+                                <div class="name">
+                                    <div class="text-form">Имя</div>
+                                    <div class="text-info">
+                                        {{ activeStartup.name }}
+                                    </div>
+                                </div>
+                                <div class="own">
+                                    <div class="text-form">
+                                        Кому пренадлежит
+                                    </div>
+                                    <div class="text-info">
+                                        {{ activeStartup.own }}
+                                    </div>
+                                </div>
+                                <div class="description">
+                                    <div class="text-form">Описание</div>
+                                    <div class="text-info">
+                                        {{ activeStartup.description }}
+                                    </div>
+                                </div>
+                                <div class="target">
+                                    <div class="text-form">Цели стартапа</div>
+                                    <div class="text-info">
+                                        {{ activeStartup.target }}
+                                    </div>
+                                </div>
+                                <div class="plan-commercial">
+                                    <div class="text-form">
+                                        Коммерческий план
+                                    </div>
+                                    <div class="text-info">
+                                        {{ activeStartup.plancommercial }}
+                                    </div>
+                                </div>
+                                <div class="plan-grow">
+                                    <div class="text-form">План роста</div>
+                                    <div class="text-info">
+                                        {{ activeStartup.planGrow }}
+                                    </div>
+                                </div>
+                                <div class="area">
+                                    <div class="text-form">
+                                        Область применения
+                                    </div>
+                                    <div class="text-info">
+                                        {{ activeStartup.area }}
+                                    </div>
+                                </div>
+                                <div class="tasks">
+                                    <div class="text-form">Задачи</div>
+                                    <div class="text-info">
+                                        {{ activeStartup.tasks }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block">
+                                <div class="user-block d-flex mb-5">
+                                    <div class="text-form">
+                                        Загруженный файл
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div
+                            class="close"
+                            @click="$bvModal.hide('modal-startup')"
+                        >
+                            <img src="/images/close-modal.svg" alt="" />
+                        </div>
+                    </div>
+                </b-modal>
             </div>
         </div>
     </div>
@@ -109,6 +205,18 @@
 export default {
     data: function () {
         return {
+            activeStartup: {
+                id: 1,
+                name: "Цифровой баян",
+                photo: "/images/startup1.png",
+                own: "dfsdfd",
+                description: "dsfdsf",
+                target: "sdfsd",
+                plancommercial: "dsfsd",
+                planGrow: "dsfsd",
+                area: "sdfds",
+                tasks: "sfsd",
+            },
             activeSet: {
                 id: 22,
                 name: "Зимний набор1",
@@ -121,6 +229,18 @@ export default {
                     {
                         id: 32,
                         name: "Цифровой баян1",
+                        photo: "/images/startup1.png",
+                        own: "dfsdfd",
+                        description: "dsfdsf",
+                        target: "sdfsd",
+                        plancommercial: "dsfsd",
+                        planGrow: "dsfsd",
+                        area: "sdfds",
+                        tasks: "sfsd",
+                    },
+                    {
+                        id: 12,
+                        name: "Цифровой баян3",
                         photo: "/images/startup1.png",
                         own: "dfsdfd",
                         description: "dsfdsf",
@@ -229,5 +349,66 @@ export default {
     position: absolute;
     top: 10px;
     right: 10px;
+}
+.startup {
+    background: transparent;
+    border: none;
+    padding: 0;
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+
+    color: #000000;
+}
+.tracker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+.add-tracker .text {
+    font-family: Roboto;
+    font-size: 20px;
+    line-height: 21px;
+    display: flex;
+    align-items: center;
+
+    color: #000000;
+}
+.add-tracker .avatar {
+    width: 120px;
+    height: 120px;
+    background: #c4c4c4;
+    border: 1px solid #000000;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.add-tracker .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.add-tracker .avatar img {
+    width: 100%;
+}
+form .text-form {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 16px;
+    color: #000000;
+    margin-bottom: 10px;
+}
+.text-info {
+    font-family: Roboto;
+    font-size: 18px;
+    line-height: 16px;
+    color: #000000 !important;
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 30px;
+    width: 100%;
 }
 </style>

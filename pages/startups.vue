@@ -1,13 +1,6 @@
 <template>
     <div class="main">
-        <div class="row">
-            <div class="col-12 admin d-flex">
-                <div class="avatar">
-                    <img src="/images/avatar.png" alt="" />
-                </div>
-                <div class="name">Максим Белоусов</div>
-            </div>
-        </div>
+        <Admin></Admin>
         <div class="row">
             <div class="col-12 control-tracker">
                 <div class="users">Все стартапы</div>
@@ -27,7 +20,7 @@
             hide-header
             ok-only
             ok-title="Готово"
-            id="modal-2"
+            id="modal-startup"
             @hidden="$router.push({ query })"
         >
             <div class="add-tracker">
@@ -92,7 +85,7 @@
                         </div>
                     </div>
                 </form>
-                <div class="close" @click="$bvModal.hide('modal-2')">
+                <div class="close" @click="$bvModal.hide('modal-startup')">
                     <img src="/images/close-modal.svg" alt="" />
                 </div>
             </div>

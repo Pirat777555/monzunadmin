@@ -1,13 +1,6 @@
 <template>
     <div class="main">
-        <div class="row">
-            <div class="col-12 admin d-flex">
-                <div class="avatar">
-                    <img src="/images/avatar.png" alt="" />
-                </div>
-                <div class="name">Максим Белоусов</div>
-            </div>
-        </div>
+        <Admin></Admin>
         <div class="row">
             <div class="col-12 control-tracker">
                 <div class="users">Все наборы</div>

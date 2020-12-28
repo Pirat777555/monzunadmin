@@ -1,13 +1,6 @@
 <template>
     <div class="statistic">
-        <div class="row">
-            <div class="col-12 admin d-flex">
-                <div class="avatar">
-                    <img src="/images/avatar.png" alt="" />
-                </div>
-                <div class="name">Максим Белоусов</div>
-            </div>
-        </div>
+        <Admin></Admin>
         <div class="row">
             <div
                 class="col-12 d-flex justify-content-between align-items-center"
@@ -64,7 +57,10 @@
                         </div>
                         <div>
                             <div class="mark mb-5">Оценка: 5 отлично</div>
-                            <input type="file" />
+                            <div class="file">
+                                <div><img src="/images/file.png" alt="" /></div>
+                                <div><a href="">filename</a></div>
+                            </div>
                         </div>
                         <div
                             class="close"
@@ -204,5 +200,15 @@ export default {
 
     color: #000000;
     margin-top: 15px;
+}
+.view-report .file a {
+    font-family: Roboto;
+    font-size: 14px;
+    line-height: 16px;
+    color: #000000;
+    text-decoration: none;
+}
+.view-report .file {
+    text-align: center;
 }
 </style>

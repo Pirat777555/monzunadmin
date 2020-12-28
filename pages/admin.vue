@@ -4,13 +4,8 @@
         <form class="form-horizontal">
             <div class="heading">Вход Администратора</div>
             <div class="form-group">
-                <div class="text-form">email</div>
-                <input
-                    type="email"
-                    class="form-control"
-                    id="inputEmail"
-                    placeholder="E-mail"
-                />
+                <div class="text-form">Электронная почта</div>
+                <input type="email" class="form-control" id="inputEmail" />
             </div>
             <div class="form-group help">
                 <div class="text-form">Пароль</div>
@@ -18,7 +13,6 @@
                     type="password"
                     class="form-control"
                     id="inputPassword"
-                    placeholder="Password"
                 />
             </div>
             <div class="form-group">
@@ -65,7 +59,7 @@ export default {
     background: #ffffff;
     border-radius: 5px;
     padding: 35px 15px;
-    width: 40%;
+    width: 740px;
     margin: auto;
     margin-top: 30px;
     text-align: center;

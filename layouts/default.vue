@@ -13,6 +13,27 @@ export default {};
 </script>
 
 <style>
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("/fonts/Roboto/Roboto-Black.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/Montserrat/Montserrat-Black.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Comfortaa";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/Comfortaa/Comfortaa-Regular.ttf") format("truetype");
+}
 .modal-body {
     padding: 40px;
 }

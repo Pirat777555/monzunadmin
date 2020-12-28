@@ -1,13 +1,6 @@
 <template>
     <div class="main">
-        <div class="row">
-            <div class="col-12 admin d-flex">
-                <div class="avatar">
-                    <img src="/images/avatar.png" alt="" />
-                </div>
-                <div class="name">Максим Белоусов</div>
-            </div>
-        </div>
+        <Admin></Admin>
         <div class="row">
             <div class="col-12 col-lg-12 control-tracker">
                 <div class="users">Все пользователи</div>
@@ -205,12 +198,6 @@
                         </div>
                     </div>
                 </b-modal>
-<<<<<<< HEAD
-            </div>
-            <div class="col-12 col-lg-6">
-                <b-button class="btn btn-add" v-b-modal.modal-1>
-                    Добавить трекера </b-button
-=======
                 <b-modal
                     centered
                     hide-header
@@ -219,7 +206,6 @@
                     id="modal-delete"
                     @hidden="$router.push({ query })"
                     @ok="deleteUser($route.query.id)"
->>>>>>> 96316dc0a8632fac194c2dc66c2f813c8a6df214
                 >
                     <div class="delete-tracker">
                         <div class="text">
@@ -251,6 +237,7 @@
 
 <script>
 import User from "~/components/user.vue";
+import Admin from "./admin.vue";
 export default {
     name: "index",
     components: { User },
@@ -359,21 +346,7 @@ export default {
 .main {
     margin-top: 30px;
 }
-.name {
-    font-family: Futura PT;
-    font-size: 18px;
-    line-height: 115%;
 
-    color: #77797d;
-}
-.admin {
-    align-items: center;
-    justify-content: flex-end;
-    margin-bottom: 90px;
-}
-.admin .avatar {
-    margin-right: 10px;
-}
 .control-tracker {
     display: flex;
     justify-content: space-between;
