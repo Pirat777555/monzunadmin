@@ -12,7 +12,7 @@
         <div class="col-12 admin d-flex">
             <div class="panel" v-bind:class="{ 'panel-active': isActive }">
                 <ul>
-                    <li><a href="/admin">Выход</a></li>
+                    <li><a href="/monzunadmin/admin">Выход</a></li>
                 </ul>
             </div>
         </div>
