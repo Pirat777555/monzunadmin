@@ -6,7 +6,7 @@
                     <div class="text">Заявки на набор</div>
                     <button
                         class="btn-back"
-                        @click.prevent="$router.push('/sets/' + activeSet.id)"
+                        @click.prevent="$router.go(-1)"
                     >
                         Назад
                     </button>
@@ -71,7 +71,7 @@
                             class="close"
                             @click.prevent="$bvModal.hide('modal-accept')"
                         >
-                            <img src="/images/close-modal.svg" alt="" />
+                            <img src="images/close-modal.svg" alt="" />
                         </div>
                     </div>
                     <div class="choose-tracker">
@@ -80,6 +80,9 @@
                             <option>tracker1</option>
                             <option>tracker2</option>
                         </select>
+                    </div>
+                    <div class="close" @click="$bvModal.hide('modal-accept')">
+                        <img src="/images/close-modal.svg" alt="" />
                     </div>
                 </b-modal>
                 <b-modal
@@ -367,5 +370,10 @@ form .text-form {
     padding: 10px;
     margin-bottom: 30px;
     width: 100%;
+}
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 </style>

@@ -4,15 +4,15 @@
             <div class="avatar">
                 <img src="/images/avatar.png" alt="" />
             </div>
-            <div class="name">Максим Белоусов</div>
-            <div class="open-toggle" @click="visible">
+            <div class="name">{{ user.name }}</div>
+            <div class="open-toggle">
                 <img src="/images/dropdown-toggle.png" alt="" />
             </div>
         </div>
         <div class="col-12 admin d-flex">
-            <div class="panel" v-bind:class="{ 'panel-active': isActive }">
+            <div class="panel">
                 <ul>
-                    <li><a href="/monzunadmin/admin">Выход</a></li>
+                    <li><nuxt-link :to="{name: 'admin'}" @click.native="$cookies.set('token', ''); $store.commit('setUser', null)">Выход</nuxt-link></li>
                 </ul>
             </div>
         </div>
@@ -25,11 +25,16 @@ export default {
             isActive: false,
         };
     },
-    methods: {
-        visible: function (event) {
-            this.isActive = !this.isActive;
-        },
+    computed: {
+        user() {
+            return this.$store.state.user; 
+        }
     },
+    // methods: {
+    //     getPost() {
+    //         this.user; получить данные user-a  авторизованного пользователля системы
+    //     }
+    // }
 };
 </script>
 <style scoped>
@@ -49,6 +54,11 @@ export default {
 }
 .admin .avatar {
     margin-right: 10px;
+}
+.avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
 }
 .open-toggle {
     cursor: pointer;

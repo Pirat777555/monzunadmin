@@ -31,7 +31,7 @@
                         </div>
                         <form>
                             <div class="name">
-                                <div class="text-form">ФИО</div>
+                                <div class="text-form">Имя</div>
                                 <input type="text" v-model="newUser.login" />
                             </div>
                             <div class="telephone">
@@ -54,7 +54,7 @@
                     ok-only
                     ok-title="Ок"
                     id="modal-2"
-                    @hidden="$router.push({ query })"
+                    @hidden="$router.push({ query: {} })"
                 >
                     <div class="add-tracker">
                         <div class="tracker">
@@ -66,7 +66,7 @@
                         <form class="d-flex justify-content-between">
                             <div class="info">
                                 <div class="name">
-                                    <div class="text-form">ФИО</div>
+                                    <div class="text-form">Имя</div>
                                     <input
                                         type="text"
                                         v-model="activeUser.name"
@@ -131,7 +131,7 @@
                     ok-title="Изменить"
                     cancel-title="Отмена"
                     id="modal-3"
-                    @hidden="$router.push({ query })"
+                    @hidden="$router.push({ query: {} })"
                 >
                     <div class="add-tracker">
                         <div class="tracker">
@@ -143,7 +143,7 @@
                         <form class="d-flex justify-content-between">
                             <div class="info">
                                 <div class="name">
-                                    <div class="text-form">ФИО</div>
+                                    <div class="text-form">Имя</div>
                                     <input
                                         type="text"
                                         v-model="activeUser.name"
@@ -171,7 +171,12 @@
                                     <div class="text-form">
                                         Блокирование пользователя
                                     </div>
-                                    <div class="check-block">
+                                    <div
+                                        class="check-block"
+                                        @click="
+                                            activeUser.isBlock = !activeUser.isBlock
+                                        "
+                                    >
                                         <img
                                             src="/images/block.png"
                                             alt=""
@@ -204,8 +209,8 @@
                     ok-title="Да"
                     cancel-title="Нет"
                     id="modal-delete"
-                    @hidden="$router.push({ query })"
-                    @ok="deleteUser($route.query.id)"
+                    @hidden="removedUserId = ''"
+                    @ok="deleteUser(removedUserId)"
                 >
                     <div class="delete-tracker">
                         <div class="text">
@@ -221,6 +226,7 @@
                 </b-modal>
             </div>
         </div>
+
         <div class="row">
             <User
                 v-for="(user, index) in users"
@@ -230,6 +236,7 @@
                 :id="user.id"
                 :isBlock="user.isBlock"
                 :reasonBlock="user.reasonBlock"
+                @removeUser="removedUserId = user.id"
             ></User>
         </div>
     </div>
@@ -241,8 +248,10 @@ import Admin from "./admin.vue";
 export default {
     name: "index",
     components: { User },
+    middleware: 'authenticated', 
     data: function () {
         return {
+            removedUserId: "",
             activeUser: {
                 id: null,
                 name: "fdsfs",
@@ -320,6 +329,11 @@ export default {
             ],
         };
     },
+    computed: {
+        user() {
+            return this.$store.state.user; 
+        }
+    },
     methods: {
         addUser() {
             this.users.push(this.newUser);
@@ -329,16 +343,14 @@ export default {
             this.users.forEach((value, item) =>
                 value.id == index ? this.users.splice(item, 1) : null
             );
+            this.removedUserId = "";
         },
     },
-    // mounted() {
-    //     this.$axios.method
-    //         .get("https://api.coindesk.com/v1/bpi/currentprice.json")
-    //         .then((response) => (this.users = response))
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // },
+    async mounted() {
+        this.users = await this.$axios.$get(
+            "https://jsonplaceholder.typicode.com/users"
+        );
+    },
 };
 </script>
 

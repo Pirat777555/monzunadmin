@@ -5,21 +5,21 @@
                 <b-button
                     class="delete"
                     v-b-modal.modal-delete
-                    @click="$router.push({ query: { id: id } })"
+                    @click="$emit('removeStartup')"
                 >
-                    <img src="/images/delete.svg" alt=""
+                    <img src="images/delete.svg" alt=""
                 /></b-button>
             </div>
             <div class="user-photo">
-                <img :src="photo" alt="" />
+                <img :src="photo" v-if="photo" alt="" />
+                <img src="/images/defaultStartup.jpg" alt="" />
             </div>
             <div class="user-login">{{ name }}</div>
             <b-button
                 class="details"
-                v-b-modal.modal-startup
-                @click="$router.push({ query: { id: id } })"
+                @click="$emit('getStartup')"
             >
-                Подробнее <img src="/images/arrow.svg" alt=""
+                Подробнее <img src="images/arrow.svg" alt=""
             /></b-button>
         </div>
     </div>
@@ -78,6 +78,7 @@ export default {
     background: #3a3a3a;
     padding: 10px;
     text-align: left;
+    height: 100%;
 }
 .user:hover .edit {
     opacity: 1;

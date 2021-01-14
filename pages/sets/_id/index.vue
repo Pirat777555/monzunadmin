@@ -3,7 +3,7 @@
         <Admin></Admin>
         <div class="row">
             <div class="col-12 d-flex justify-content-end">
-                <button class="btn-back" @click.prevent="$router.push('/sets')">
+                <button class="btn-back" @click.prevent="$router.go(-1)">
                     Назад
                 </button>
             </div>
@@ -28,14 +28,12 @@
             </div>
             <div class="col-lg-6 d-flex justify-content-end align-items-center">
                 <div class="active" v-if="activeSet.active">
-                    Стартап активен
+                    Набор активен
                 </div>
                 <button
                     class="btn-proposal"
                     @click.prevent="
-                        $router.push(
-                            '/sets/' + activeSet.id + '/' + activeSet.startup.id
-                        )
+                        $router.push('/sets/' + activeSet.id + '/proposal')
                     "
                 >
                     Заявки на набор
@@ -54,11 +52,6 @@
                                 <b-button
                                     class="startup"
                                     v-b-modal.modal-startup
-                                    @click="
-                                        $router.push({
-                                            query: { id: activeStartup.id },
-                                        })
-                                    "
                                 >
                                     {{ set.name }}</b-button
                                 >
@@ -69,7 +62,7 @@
                                     class="delete btn btn-secondary"
                                     @click="
                                         $router.push(
-                                            '/sets/statistic/' + index.id
+                                            '/sets/statistic/' + set.id
                                         )
                                     "
                                 >
@@ -82,7 +75,11 @@
                                 /></b-button>
                             </td>
                             <td>
-                                <b-button class="delete" v-b-modal.modal-delete>
+                                <b-button
+                                    class="delete"
+                                    v-b-modal.modal-delete
+                                    @click="removedStartupId = set.id"
+                                >
                                     <img src="/images/delete.png" alt=""
                                 /></b-button>
                             </td>
@@ -95,7 +92,7 @@
                     ok-title="Да"
                     cancel-title="Нет"
                     id="modal-delete"
-                    @hidden="$router.push({ query: {} })"
+                    @ok="deleteStartup(removedStartupId)"
                 >
                     <div class="delete-tracker">
                         <div class="text">
@@ -119,7 +116,7 @@
                 >
                     <div class="add-tracker">
                         <div class="tracker">
-                            <div class="text">Просмотр стартапаzcxzcxzcx</div>
+                            <div class="text">Просмотр стартапа</div>
                             <div class="avatar">
                                 <img :src="activeStartup.photo" alt="" />
                             </div>
@@ -197,6 +194,41 @@
                         </div>
                     </div>
                 </b-modal>
+                <b-modal
+                    centered
+                    hide-header
+                    ok-only
+                    ok-title="Ок"
+                    id="modal-2"
+                >
+                    <div class="view-accept">
+                        <div>
+                            <div class="text">Стартап</div>
+                        </div>
+                        <div class="avatar">
+                            <img :src="activeSet.startup.photo" alt="" />
+                        </div>
+                        <div>
+                            <div class="name">gfhffgh</div>
+                        </div>
+                        <div
+                            class="close"
+                            @click.prevent="$bvModal.hide('modal-accept')"
+                        >
+                            <img src="images/close-modal.svg" alt="" />
+                        </div>
+                    </div>
+                    <div class="choose-tracker">
+                        <div class="text">Выберите трекера</div>
+                        <select>
+                            <option>tracker1</option>
+                            <option>tracker2</option>
+                        </select>
+                    </div>
+                    <div class="close" @click="$bvModal.hide('modal-2')">
+                        <img src="/images/close-modal.svg" alt="" />
+                    </div>
+                </b-modal>
             </div>
         </div>
     </div>
@@ -205,10 +237,11 @@
 export default {
     data: function () {
         return {
+            removedStartupId: "",
             activeStartup: {
                 id: 1,
                 name: "Цифровой баян",
-                photo: "/images/startup1.png",
+                photo: "images/startup1.png",
                 own: "dfsdfd",
                 description: "dsfdsf",
                 target: "sdfsd",
@@ -228,7 +261,7 @@ export default {
                 startup: [
                     {
                         id: 32,
-                        name: "Цифровой баян1",
+                        name: "Цифровой баян32",
                         photo: "/images/startup1.png",
                         own: "dfsdfd",
                         description: "dsfdsf",
@@ -265,6 +298,16 @@ export default {
                 ],
             },
         };
+    },
+    methods: {
+        deleteStartup(index) {
+            this.activeSet.startup.forEach((value, item) =>
+                value.id == index
+                    ? this.activeSet.startup.splice(item, 1)
+                    : null
+            );
+            this.removedStartupId = "";
+        },
     },
 };
 </script>
@@ -384,7 +427,7 @@ export default {
     border-radius: 50%;
     overflow: hidden;
 }
-.add-tracker .close {
+.close {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -410,5 +453,41 @@ form .text-form {
     padding: 10px;
     margin-bottom: 30px;
     width: 100%;
+}
+.view-accept {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.view-accept .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.view-accept .avatar {
+    width: 120px;
+    height: 120px;
+    background: #c4c4c4;
+    border: 1px solid #000000;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.view-accept .text {
+    color: #000000;
+}
+.choose-tracker .text {
+    color: #000000;
+    margin-right: 90px;
+}
+.choose-tracker {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 100px;
+}
+select {
+    width: 261px;
+    height: 46px;
 }
 </style>

@@ -3,14 +3,14 @@
         <div class="user">
             <div class="edit">
                 <b-button class="change" v-b-modal.modal-3>
-                    <img src="/images/edit.svg" alt=""
+                    <img src="images/edit.svg" alt=""
                 /></b-button>
                 <b-button
                     class="delete"
                     v-b-modal.modal-delete
-                    @click="$router.push({ query: { id: id } })"
+                    @click="$emit('removeUser')"
                 >
-                    <img src="/images/delete.svg" alt=""
+                    <img src="images/delete.svg" alt=""
                 /></b-button>
             </div>
             <div class="user-photo">
@@ -22,7 +22,7 @@
                 v-b-modal.modal-2
                 @click="$router.push({ query: { id: id } })"
             >
-                Подробнее <img src="/images/arrow.svg" alt=""
+                Подробнее <img src="images/arrow.svg" alt=""
             /></b-button>
         </div>
     </div>
@@ -114,7 +114,7 @@ export default {
         },
         photo: {
             type: String,
-            default: "/images/noname.jpg",
+            default: "images/noname.jpg",
         },
         telephone: {
             type: String,

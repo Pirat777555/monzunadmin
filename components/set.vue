@@ -7,14 +7,14 @@
                     v-b-modal.modal-2
                     @click="$router.push({ query: { id: id } })"
                 >
-                    <img src="/images/edit.svg" alt=""
+                    <img src="images/edit.svg" alt=""
                 /></b-button>
                 <b-button
                     class="delete"
                     v-b-modal.modal-delete
-                    @click="$router.push({ query: { id: id } })"
+                    @click="$emit('removeSet')"
                 >
-                    <img src="/images/delete.svg" alt=""
+                    <img src="images/delete.svg" alt=""
                 /></b-button>
             </div>
             <div class="user-photo">
@@ -25,7 +25,7 @@
                 class="details"
                 @click.prevent="$router.push('/sets/' + id)"
             >
-                <a href=""> Подробнее <img src="/images/arrow.svg" alt="" /></a>
+                <a href=""> Подробнее <img src="images/arrow.svg" alt="" /></a>
             </button>
         </div>
     </div>

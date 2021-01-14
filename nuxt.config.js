@@ -12,7 +12,6 @@ export default {
     ]
   },
 
-  target: 'static',   router: {     base: '/monzunadmin/'   },
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
   ],
@@ -35,12 +34,12 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
     '@nuxtjs/axios',
+    'cookie-universal-nuxt',
   ],
   axios: {
     // extra config e.gbaseURL: process.env.API_URL,
     // BaseURL: 'https://link-to-API'
     baseURL: process.env.API_URL,
-
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

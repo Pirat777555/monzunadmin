@@ -16,6 +16,7 @@
                 :name="set.name"
                 :photo="set.photo"
                 :id="set.id"
+                @removeSet="removedSetId = set.id"
             ></Set>
         </div>
         <b-modal
@@ -33,17 +34,27 @@
                         <div>
                             <img
                                 src="/images/set1.png"
+                                v-if="!url"
                                 alt=""
                                 class="avatar mb-2"
                             />
+                            <img v-if="url" :src="url" class="avatar mb-2" />
                         </div>
-                        <input type="file" :v-model="newSet.photo" />
+                        <input
+                            type="file"
+                            :v-model="newSet.photo"
+                            @change="onFileChange"
+                            accept="image/x-png,image/gif,image/jpeg"
+                        />
                     </div>
                 </div>
                 <form>
-                    <div class="name">
-                        <div class="text-form">Название набора</div>
-                        <input type="text" v-model="newSet.name" />
+                    <div class="name d-flex justify-content-between">
+                        <div>
+                            <div class="text-form">Название набора</div>
+                            <input type="text" v-model="newSet.name" />
+                        </div>
+                        <div>Активен <input type="checkbox" checked /></div>
                     </div>
                     <div class="description">
                         <div class="text-form">Описание</div>
@@ -85,8 +96,8 @@
             ok-title="Да"
             cancel-title="Нет"
             id="modal-delete"
-            @hidden="$router.push({ query })"
-            @ok="deleteSet($route.query.id)"
+            @hidden="removedSetId = ''"
+            @ok="deleteSet(removedSetId)"
         >
             <div class="delete-tracker">
                 <div class="text">Вы действительно хотите удалить ?</div>
@@ -109,12 +120,19 @@
                     <div>
                         <div>
                             <img
-                                :src="activeSet.photo"
+                                src="/images/set1.png"
+                                v-if="!url"
                                 alt=""
                                 class="avatar mb-2"
                             />
+                            <img v-if="url" :src="url" class="avatar mb-2" />
                         </div>
-                        <input type="file" />
+                        <input
+                            type="file"
+                            :v-model="newSet.photo"
+                            @change="onFileChange"
+                            accept="image/x-png,image/gif,image/jpeg"
+                        />
                     </div>
                 </div>
                 <form>
@@ -166,11 +184,13 @@ export default {
     components: { Set },
     data: function () {
         return {
+            url: null,
+            removedSetId: "",
             newSet: {},
             activeSet: {
                 id: 22,
                 name: "Зимний набор1",
-                photo: "/images/set1.png",
+                photo: "images/set1.png",
                 description: "vxcvxcvxc",
                 startData: "2020-12-26",
                 endData: "2020-12-29",
@@ -180,7 +200,7 @@ export default {
                 {
                     id: 2,
                     name: "Зимний набор",
-                    photo: "/images/set1.png",
+                    photo: "images/set1.png",
                     description: "",
                     startData: "",
                     endData: "",
@@ -188,7 +208,7 @@ export default {
                 {
                     id: 22,
                     name: "Зимний набор1",
-                    photo: "/images/set1.png",
+                    photo: "images/set1.png",
                     description: "",
                     startData: "",
                     endData: "",
@@ -196,7 +216,7 @@ export default {
                 {
                     id: 23,
                     name: "Зимний набор2",
-                    photo: "/images/set1.png",
+                    photo: "images/set1.png",
                     description: "",
                     startData: "",
                     endData: "",
@@ -204,7 +224,7 @@ export default {
                 {
                     id: 24,
                     name: "Зимний набор3",
-                    photo: "/images/set1.png",
+                    photo: "images/set1.png",
                     description: "",
                     startData: "",
                     endData: "",
@@ -212,7 +232,7 @@ export default {
                 {
                     id: 25,
                     name: "Зимний набор4",
-                    photo: "/images/set1.png",
+                    photo: "images/set1.png",
                     description: "",
                     startData: "",
                     endData: "",
@@ -220,7 +240,7 @@ export default {
                 {
                     id: 26,
                     name: "Зимний набор5",
-                    photo: "/images/set1.png",
+                    photo: "images/set1.png",
                     description: "",
                     startData: "",
                     endData: "",
@@ -238,6 +258,11 @@ export default {
             this.sets.forEach((value, item) =>
                 value.id == index ? this.sets.splice(item, 1) : null
             );
+            this.removedSetId = "";
+        },
+        onFileChange(e) {
+            const file = e.target.files[0];
+            this.url = URL.createObjectURL(file);
         },
     },
 };

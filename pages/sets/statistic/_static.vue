@@ -10,7 +10,7 @@
                 </div>
                 <button
                     class="btn-back"
-                    @click.prevent="$router.push('/sets/' + activeSet.id)"
+                    @click.prevent="$router.go(-1)"
                 >
                     Назад
                 </button>
