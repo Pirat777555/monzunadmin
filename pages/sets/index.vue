@@ -14,8 +14,10 @@
                 v-for="(set, index) in sets"
                 :key="index"
                 :name="set.name"
-                :photo="set.photo"
+                :photo="set.logo"
                 :id="set.id"
+                @getSet="getSet(set.id)"
+                @getSetEdit="getSetEdit(set.id)"
                 @removeSet="removedSetId = set.id"
             ></Set>
         </div>
@@ -42,6 +44,8 @@
                         </div>
                         <input
                             type="file"
+                            id="file"
+                            ref="file"
                             :v-model="newSet.photo"
                             @change="onFileChange"
                             accept="image/x-png,image/gif,image/jpeg"
@@ -54,7 +58,15 @@
                             <div class="text-form">Название набора</div>
                             <input type="text" v-model="newSet.name" />
                         </div>
-                        <div>Активен <input type="checkbox" checked /></div>
+
+                        <div>
+                            Активен
+                            <input
+                                type="checkbox"
+                                checked
+                                v-model="newSet.active"
+                            />
+                        </div>
                     </div>
                     <div class="description">
                         <div class="text-form">Описание</div>
@@ -72,7 +84,7 @@
                             <input
                                 type="date"
                                 name=""
-                                v-model="newSet.startData"
+                                v-model="newSet.startedAt"
                             />
                         </div>
                         <div class="end-date">
@@ -80,7 +92,7 @@
                             <input
                                 type="date"
                                 name=""
-                                v-model="newSet.endData"
+                                v-model="newSet.endedAt"
                             />
                         </div>
                     </div>
@@ -112,7 +124,8 @@
             ok-title="Изменить"
             cancel-title="Отмена"
             id="modal-2"
-            @ok="addSet"
+            ref="editSet"
+            @ok="editSet(activeSet.id)"
         >
             <div class="add-tracker">
                 <div class="tracker">
@@ -156,7 +169,7 @@
                             <input
                                 type="date"
                                 name=""
-                                v-model="activeSet.startData"
+                                v-model="activeSet.startedAt"
                             />
                         </div>
                         <div class="end-date">
@@ -164,7 +177,7 @@
                             <input
                                 type="date"
                                 name=""
-                                v-model="activeSet.endData"
+                                v-model="activeSet.endedAt"
                             />
                         </div>
                     </div>
@@ -185,84 +198,155 @@ export default {
     data: function () {
         return {
             url: null,
+            file: "",
             removedSetId: "",
             newSet: {},
-            activeSet: {
-                id: 22,
-                name: "Зимний набор1",
-                photo: "images/set1.png",
-                description: "vxcvxcvxc",
-                startData: "2020-12-26",
-                endData: "2020-12-29",
-                active: true,
-            },
-            sets: [
-                {
-                    id: 2,
-                    name: "Зимний набор",
-                    photo: "images/set1.png",
-                    description: "",
-                    startData: "",
-                    endData: "",
-                },
-                {
-                    id: 22,
-                    name: "Зимний набор1",
-                    photo: "images/set1.png",
-                    description: "",
-                    startData: "",
-                    endData: "",
-                },
-                {
-                    id: 23,
-                    name: "Зимний набор2",
-                    photo: "images/set1.png",
-                    description: "",
-                    startData: "",
-                    endData: "",
-                },
-                {
-                    id: 24,
-                    name: "Зимний набор3",
-                    photo: "images/set1.png",
-                    description: "",
-                    startData: "",
-                    endData: "",
-                },
-                {
-                    id: 25,
-                    name: "Зимний набор4",
-                    photo: "images/set1.png",
-                    description: "",
-                    startData: "",
-                    endData: "",
-                },
-                {
-                    id: 26,
-                    name: "Зимний набор5",
-                    photo: "images/set1.png",
-                    description: "",
-                    startData: "",
-                    endData: "",
-                },
-            ],
+            activeSet: {},
+            sets: [],
         };
+    },
+    async created() {
+        this.sets = await this.$axios.$get(
+            "https://monzun-admin.herokuapp.com/api/trackings",
+            {
+                headers: {
+                    Authorization: "Bearer " + this.$cookies.get("token"),
+                },
+            }
+        );
     },
     methods: {
         addSet() {
-            this.sets.push(this.newSet);
-            console.log(this.newSet);
+            let formData = new FormData();
+            formData.append("file", this.file);
+            this.$axios
+                .$post(
+                    "https://monzun-admin.herokuapp.com/api/trackings",
+                    this.newSet,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Набор добавлен!", {
+                        title: "Добавление Набора",
+                        variant: "success",
+                    });
+                    this.sets = {};
+                    this.updateSet();
+                })
+                .catch((err) => {
+                    this.$bvToast.toast("ошибка", {
+                        title: "Не удалось добавить набор",
+                        variant: "danger",
+                        solid: true,
+                    });
+                });
             this.newSet = {};
         },
+        getSet(id) {
+            this.$router.push({ name: "sets-id", params: { id: id } });
+        },
+        async getSetEdit(id) {
+            try {
+                this.activeSet = await this.$axios.$get(
+                    `https://monzun-admin.herokuapp.com/api/trackings/${id}`,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                );
+                this.$refs["editSet"].show();
+            } catch {
+                this.$bvToast.toast("Не удалось получить данные набора.", {
+                    title: "набор не найден.",
+                    variant: "danger",
+                    solid: true,
+                });
+            }
+            console.log(this.activeSet);
+        },
+        editSet(id) {
+            console.log(this.activeSet);
+            this.$axios
+                .$put(
+                    `https://monzun-admin.herokuapp.com/api/trackings/${id}`,
+                    this.activeSet,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Набор изменен!", {
+                        title: "Изменение набора",
+                        variant: "success",
+                    });
+                    this.sets = {};
+                    this.updateSet();
+                })
+                .catch((err) => {
+                    this.$bvToast.toast("ошибка", {
+                        title: "Не удалось изменить набор",
+                        variant: "danger",
+                        solid: true,
+                    });
+                });
+            this.activeSet = {};
+        },
         deleteSet(index) {
-            this.sets.forEach((value, item) =>
-                value.id == index ? this.sets.splice(item, 1) : null
-            );
+            this.$axios
+                .$delete(
+                    `https://monzun-admin.herokuapp.com/api/trackings/${index}`,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Набор удален!", {
+                        title: "удаление набора",
+                        variant: "success",
+                    });
+                    this.sets = {};
+                    this.updateSet();
+                })
+                .catch((err) => {
+                    this.$bvToast.toast("ошибка", {
+                        title: "Не удалось удалить набор",
+                        variant: "danger",
+                        solid: true,
+                    });
+                });
             this.removedSetId = "";
         },
         onFileChange(e) {
             const file = e.target.files[0];
             this.url = URL.createObjectURL(file);
+            if (e.target.files[0].size > 5000000) {
+                alert("File is too big!");
+                this.$refs.file.value = null;
+            }
+            this.file = this.$refs.file.files[0];
+        },
+        async updateSet() {
+            this.sets = await this.$axios.$get(
+                "https://monzun-admin.herokuapp.com/api/trackings",
+                {
+                    headers: {
+                        Authorization: "Bearer " + this.$cookies.get("token"),
+                    },
+                }
+            );
         },
     },
 };

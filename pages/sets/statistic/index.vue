@@ -6,19 +6,28 @@
                 class="col-12 d-flex justify-content-between align-items-center"
             >
                 <div class="photo">
-                    <img :src="activeSet.photo" alt="" class="image-set" />
+                    <img
+                        :src="activeStartup.logo"
+                        v-if="activeStartup.logo"
+                        alt=""
+                        class="image-set"
+                    />
+                    <img
+                        src="/images/defaultStartup.jpg"
+                        alt=""
+                        class="image-set"
+                    />
                 </div>
-                <button
-                    class="btn-back"
-                    @click.prevent="$router.go(-1)"
-                >
+                <button class="btn-back" @click.prevent="$router.go(-1)">
                     Назад
                 </button>
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-4">{{ activeSet.name }}</div>
-            <div class="col-4">Текущая неделя:2</div>
+            <div class="col-4">{{ activeStartup.name }}</div>
+            <div class="col-4">
+                Текущая неделя: {{ weekDate(activeStartup.createdAt) }}
+            </div>
             <div class="col-4">Итоговая оценка:</div>
         </div>
         <div class="row mt-3">
@@ -32,9 +41,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>4</td>
+                        <tr v-for="(st, index) in statistic" :key="index">
+                            <td>{{ st.week }}</td>
+                            <td>{{ st.mark }}</td>
                             <td>
                                 <b-button class="link" v-b-modal.modal-report>
                                     link</b-button
@@ -78,42 +87,42 @@
 export default {
     data: function () {
         return {
-            activeSet: {
-                id: 22,
-                name: "Зимний набор1",
-                photo: "/images/set1.png",
-                description: "vxcvxcvxc",
-                startData: "01.01.2021",
-                endData: "31.03.2021",
-                active: true,
-                startup: [
-                    {
-                        id: 32,
-                        name: "Цифровой баян1",
-                        photo: "/images/startup1.png",
-                        own: "dfsdfd",
-                        description: "dsfdsf",
-                        target: "sdfsd",
-                        plancommercial: "dsfsd",
-                        planGrow: "dsfsd",
-                        area: "sdfds",
-                        tasks: "sfsd",
-                    },
-                    {
-                        id: 12,
-                        name: "Цифровой баян3",
-                        photo: "/images/startup1.png",
-                        own: "dfsdfd",
-                        description: "dsfdsf",
-                        target: "sdfsd",
-                        plancommercial: "dsfsd",
-                        planGrow: "dsfsd",
-                        area: "sdfds",
-                        tasks: "sfsd",
-                    },
-                ],
-            },
+            statistic: [],
+            activeStartup: {},
         };
+    },
+    async created() {
+        this.statistic = await this.$axios.$get(
+            `https://monzun-admin.herokuapp.com/api/stats/${this.$route.params.idTr}/${this.$route.params.idSt}`,
+            {
+                headers: {
+                    Authorization: "Bearer " + this.$cookies.get("token"),
+                },
+            }
+        );
+        this.activeStartup = await this.$axios.$get(
+            `https://monzun-admin.herokuapp.com/api/startups/${this.$route.params.idSt}`,
+            {
+                headers: {
+                    Authorization: "Bearer " + this.$cookies.get("token"),
+                },
+            }
+        );
+        console.log(this.statistic);
+    },
+    methods: {
+        weekDate(value) {
+            console.log(value);
+            var date1 = new Date(value);
+            let now = new Date();
+            const entireWeek = Math.ceil(
+                Math.ceil(
+                    Math.abs(now.getTime() - date1.getTime()) /
+                        (1000 * 3600 * 24)
+                ) / 7
+            );
+            return entireWeek;
+        },
     },
 };
 </script>

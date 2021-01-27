@@ -12,7 +12,7 @@
             </div>
             <div class="user-photo">
                 <img :src="photo" v-if="photo" alt="" />
-                <img src="/images/defaultStartup.jpg" alt="" />
+                <img src="images/defaultStartup.jpg" alt="" />
             </div>
             <div class="user-login">{{ name }}</div>
             <b-button

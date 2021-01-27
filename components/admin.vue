@@ -12,7 +12,16 @@
         <div class="col-12 admin d-flex">
             <div class="panel">
                 <ul>
-                    <li><nuxt-link :to="{name: 'admin'}" @click.native="$cookies.set('token', ''); $store.commit('setUser', null)">Выход</nuxt-link></li>
+                    <li>
+                        <nuxt-link
+                            :to="{ name: 'admin' }"
+                            @click.native="
+                                $cookies.set('token', '');
+                                $store.commit('setUser', null);
+                            "
+                            >Выход</nuxt-link
+                        >
+                    </li>
                 </ul>
             </div>
         </div>
@@ -27,8 +36,8 @@ export default {
     },
     computed: {
         user() {
-            return this.$store.state.user; 
-        }
+            return this.$store.state.user;
+        },
     },
     // methods: {
     //     getPost() {

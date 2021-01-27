@@ -2,7 +2,7 @@
     <div class="col-12 col-lg-3 mb-3">
         <div class="user">
             <div class="edit">
-                <b-button class="change" v-b-modal.modal-3>
+                <b-button class="change" @click="$emit('getUserEdit')">
                     <img src="images/edit.svg" alt=""
                 /></b-button>
                 <b-button
@@ -14,14 +14,11 @@
                 /></b-button>
             </div>
             <div class="user-photo">
-                <img :src="photo" alt="" />
+                <img :src="photo" v-if="photo" alt="" />
+                <img src="/images/noname.jpg" alt="" />
             </div>
             <div class="user-login">{{ login }}</div>
-            <b-button
-                class="details"
-                v-b-modal.modal-2
-                @click="$router.push({ query: { id: id } })"
-            >
+            <b-button class="details" @click="$emit('getUser')">
                 Подробнее <img src="images/arrow.svg" alt=""
             /></b-button>
         </div>
