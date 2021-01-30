@@ -42,14 +42,18 @@
                             />
                             <img v-if="url" :src="url" class="avatar mb-2" />
                         </div>
-                        <input
-                            type="file"
-                            id="file"
-                            ref="file"
-                            :v-model="newSet.photo"
-                            @change="onFileChange"
-                            accept="image/x-png,image/gif,image/jpeg"
-                        />
+                        <div class="d-flex">
+                            <input
+                                type="file"
+                                id="file"
+                                ref="file"
+                                @change="onFileChange"
+                                accept="image/x-png,image/gif,image/jpeg"
+                            />
+                            <div class="dlt" @click="deleteImage">
+                                <img src="/images/delete.png" alt="" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <form>
@@ -134,18 +138,28 @@
                         <div>
                             <img
                                 src="/images/set1.png"
-                                v-if="!url"
+                                v-if="!activeSet.logo"
                                 alt=""
                                 class="avatar mb-2"
                             />
-                            <img v-if="url" :src="url" class="avatar mb-2" />
+                            <img
+                                v-if="activeSet.logo"
+                                :src="activeSet.logo.url"
+                                class="avatar mb-2"
+                            />
                         </div>
-                        <input
-                            type="file"
-                            :v-model="newSet.photo"
-                            @change="onFileChange"
-                            accept="image/x-png,image/gif,image/jpeg"
-                        />
+                        <div class="d-flex">
+                            <input
+                                type="file"
+                                id="file"
+                                ref="file"
+                                @change="onFileChange"
+                                accept="image/x-png,image/gif,image/jpeg"
+                            />
+                            <div class="dlt" @click="deleteImage">
+                                <img src="/images/delete.png" alt="" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <form>
@@ -200,9 +214,10 @@ export default {
             url: null,
             file: "",
             removedSetId: "",
-            newSet: {},
+            newSet: { logo: {} },
             activeSet: {},
             sets: [],
+            logo: {},
         };
     },
     async created() {
@@ -214,12 +229,11 @@ export default {
                 },
             }
         );
+        console.log(this.sets);
     },
     methods: {
         addSet() {
-            let formData = new FormData();
-            formData.append("file", this.file);
-            this.$axios
+            this.$axios //отправка данных набора на сервер
                 .$post(
                     "https://monzun-admin.herokuapp.com/api/trackings",
                     this.newSet,
@@ -245,6 +259,7 @@ export default {
                         solid: true,
                     });
                 });
+
             this.newSet = {};
         },
         getSet(id) {
@@ -269,10 +284,8 @@ export default {
                     solid: true,
                 });
             }
-            console.log(this.activeSet);
         },
         editSet(id) {
-            console.log(this.activeSet);
             this.$axios
                 .$put(
                     `https://monzun-admin.herokuapp.com/api/trackings/${id}`,
@@ -337,6 +350,63 @@ export default {
                 this.$refs.file.value = null;
             }
             this.file = this.$refs.file.files[0];
+            let formData = new FormData();
+            formData.append("files", this.file);
+            this.$axios //отправка изображения на сервер
+                .$post(
+                    "https://monzun-admin.herokuapp.com/api/attachment/upload-image",
+                    formData,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Изображение добавлено!", {
+                        title: "Добавление изображения",
+                        variant: "success",
+                    });
+
+                    this.logo = response;
+                    this.newSet.logoId = this.logo.id;
+                    this.activeSet.logoId = this.logo.id;
+                })
+                .catch((err) => {
+                    this.$bvToast.toast("ошибка", {
+                        title: "Не удалось отправить изображение",
+                        variant: "danger",
+                        solid: true,
+                    });
+                });
+        },
+        deleteImage() {
+            console.log(this.activeSet);
+            this.$axios
+                .$delete(
+                    `https://monzun-admin.herokuapp.com/api/attachment/delete/${this.logo.uuid}`,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Изображение удалено!", {
+                        title: "удаление изображений",
+                        variant: "success",
+                    });
+                    this.$refs.file.value = null;
+                })
+                .catch((err) => {
+                    this.$bvToast.toast("ошибка", {
+                        title: "Не удалось удалить изображение",
+                        variant: "danger",
+                        solid: true,
+                    });
+                });
         },
         async updateSet() {
             this.sets = await this.$axios.$get(
@@ -474,5 +544,8 @@ form textarea {
     position: absolute;
     top: 10px;
     right: 10px;
+}
+.dlt {
+    cursor: pointer;
 }
 </style>

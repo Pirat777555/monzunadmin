@@ -108,11 +108,9 @@ export default {
                 },
             }
         );
-        console.log(this.statistic);
     },
     methods: {
         weekDate(value) {
-            console.log(value);
             var date1 = new Date(value);
             let now = new Date();
             const entireWeek = Math.ceil(

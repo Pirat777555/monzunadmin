@@ -18,8 +18,8 @@
                 /></b-button>
             </div>
             <div class="user-photo">
-                <img :src="photo" v-if="photo" alt="" />
-                <img src="/images/set1.png" alt="" />
+                <img :src="photo.url" v-if="photo" alt="" />
+                <img src="/images/set1.png" v-if="!photo" alt="" />
             </div>
             <div class="user-login">{{ name }}</div>
             <button class="details" @click="$emit('getSet')">
@@ -102,6 +102,7 @@ export default {
 .user-photo img {
     text-align: center;
     width: 100%;
+    height: 150px;
 }
 .details {
     font-family: Montserrat;

@@ -48,7 +48,6 @@ export default {
                 })
                 .then((response) => {
                     if (response && response.token) {
-                        console.log(response);
                         this.$cookies.set("token", response.token);
                         this.$bvToast.toast("Авторизация прошла успешно!", {
                             title: "Авторизация",
@@ -71,7 +70,6 @@ export default {
                         }
                     );
                 });
-            //.then((response) => localStorage.setItem('token', response.data.token));
         },
     },
 };

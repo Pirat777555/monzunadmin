@@ -61,8 +61,8 @@
                             <div class="text">Просмотр</div>
                             <div class="avatar">
                                 <img
-                                    :src="activeUser.photo"
-                                    v-if="activeUser.photo"
+                                    :src="activeUser.logo"
+                                    v-if="activeUser.logo"
                                     alt=""
                                 />
                                 <img v-else src="images/photo.png" alt="" />
@@ -294,7 +294,6 @@ export default {
                         },
                     }
                 );
-                console.log(this.activeUser);
                 this.$refs["user"].show();
             } catch {
                 this.$bvToast.toast(
@@ -395,7 +394,6 @@ export default {
             return re.test(phone);
         },
         editUser(id) {
-            console.log(this.activeUser);
             this.$axios
                 .$put(
                     `https://monzun-admin.herokuapp.com/api/users/${id}`,

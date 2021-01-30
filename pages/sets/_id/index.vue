@@ -13,12 +13,17 @@
             <div class="col-lg-3 d-flex align-items-center">
                 <div class="photo">
                     <img
-                        :src="activeSet.logo"
+                        :src="activeSet.logo.url"
                         v-if="activeSet.logo"
                         alt=""
                         class="image-set"
                     />
-                    <img src="/images/set1.png" alt="" class="image-set" />
+                    <img
+                        src="/images/set1.png"
+                        v-if="!activeSet.logo"
+                        alt=""
+                        class="image-set"
+                    />
                 </div>
                 <div class="name-set">
                     {{ activeSet.name }}
@@ -434,7 +439,6 @@ export default {
         //запись выбранного трекера в переменную
         onChange(event) {
             this.tracker.id = event.target.value;
-            console.log(this.tracker.id);
         },
     },
 };

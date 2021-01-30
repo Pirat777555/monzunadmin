@@ -15,7 +15,7 @@
             </div>
             <div class="user-photo">
                 <img :src="photo" v-if="photo" alt="" />
-                <img src="/images/noname.jpg" alt="" />
+                <img src="/images/noname.jpg" v-if="!photo" alt="" />
             </div>
             <div class="user-login">{{ login }}</div>
             <b-button class="details" @click="$emit('getUser')">
@@ -55,6 +55,7 @@
 .user-photo img {
     text-align: center;
     width: 100%;
+    height: 150px;
 }
 .details {
     font-family: Montserrat;
