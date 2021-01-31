@@ -5,7 +5,7 @@
                 <b-button
                     class="change"
                     v-b-modal.modal-2
-                    @click="$router.push({ query: { id: id } })"
+                    @click="$emit('getSetEdit')"
                 >
                     <img src="images/edit.svg" alt=""
                 /></b-button>
@@ -18,14 +18,12 @@
                 /></b-button>
             </div>
             <div class="user-photo">
-                <img :src="photo" alt="" />
+                <img :src="photo.url" v-if="photo" alt="" />
+                <img src="/images/set1.png" v-if="!photo" alt="" />
             </div>
             <div class="user-login">{{ name }}</div>
-            <button
-                class="details"
-                @click.prevent="$router.push('/sets/' + id)"
-            >
-                <a href=""> Подробнее <img src="images/arrow.svg" alt="" /></a>
+            <button class="details" @click="$emit('getSet')">
+                Подробнее <img src="images/arrow.svg" alt="" />
             </button>
         </div>
     </div>
@@ -104,16 +102,9 @@ export default {
 .user-photo img {
     text-align: center;
     width: 100%;
+    height: 150px;
 }
 .details {
-    text-align: left;
-    cursor: pointer;
-    opacity: 0;
-    border: none;
-    background: transparent;
-    margin-top: 10px;
-}
-.details a {
     font-family: Montserrat;
     font-style: normal;
     font-weight: normal;
@@ -121,6 +112,12 @@ export default {
     line-height: 20px;
 
     color: #ffffff;
+    text-align: left;
+    cursor: pointer;
+    opacity: 0;
+    border: none;
+    background: transparent;
+    margin-top: 10px;
 }
 .btn {
     padding: 0;

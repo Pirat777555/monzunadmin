@@ -4,10 +4,7 @@
             <div class="col-12">
                 <div class="header">
                     <div class="text">Заявки на набор</div>
-                    <button
-                        class="btn-back"
-                        @click.prevent="$router.go(-1)"
-                    >
+                    <button class="btn-back" @click.prevent="$router.go(-1)">
                         Назад
                     </button>
                 </div>
@@ -17,32 +14,28 @@
             <div class="col-12">
                 <table class="table table-bordered">
                     <tbody>
-                        <tr>
+                        <tr v-for="(request, index) in requests" :key="index">
                             <th scope="row" width="50%">
                                 <b-button
                                     class="startup"
-                                    v-b-modal.modal-startup
-                                    @click="
-                                        $router.push({
-                                            query: { id: activeStartup.id },
-                                        })
-                                    "
+                                    @click="openStartup(index)"
                                 >
-                                    zxzxz</b-button
+                                    {{ request.startup.name }}</b-button
                                 >
                             </th>
                             <td>
                                 <b-button
                                     class="delete btn btn-secondary"
-                                    v-b-modal.modal-accept
+                                    @click="acceptStartup(request.id, index)"
                                 >
-                                    Принять</b-button
-                                >
+                                    Принять
+                                </b-button>
                             </td>
                             <td>
                                 <button
                                     type="button"
                                     class="delete btn btn-secondary"
+                                    @click="rejectStartup(request.id, index)"
                                 >
                                     Отклонить
                                 </button>
@@ -55,6 +48,8 @@
                     hide-header
                     ok-only
                     ok-title="Ок"
+                    ref="acceptStartup"
+                    @ok="accept"
                     id="modal-accept"
                 >
                     <div class="view-accept">
@@ -62,23 +57,39 @@
                             <div class="text">Стартап</div>
                         </div>
                         <div class="avatar">
-                            <img :src="activeSet.startup.photo" alt="" />
+                            <img
+                                :src="activeStartup.logo"
+                                v-if="activeStartup.logo"
+                                alt=""
+                                class="avatar"
+                            />
+                            <img
+                                src="/images/defaultStartup.jpg"
+                                alt=""
+                                class="avatar"
+                            />
                         </div>
                         <div>
-                            <div class="name">gfhffgh</div>
+                            <div class="name">{{ activeStartup.name }}</div>
                         </div>
                         <div
                             class="close"
                             @click.prevent="$bvModal.hide('modal-accept')"
                         >
-                            <img src="images/close-modal.svg" alt="" />
+                            <img src="/images/close-modal.svg" alt="" />
                         </div>
                     </div>
                     <div class="choose-tracker">
                         <div class="text">Выберите трекера</div>
-                        <select>
-                            <option>tracker1</option>
-                            <option>tracker2</option>
+                        <select @change="onChange($event)">
+                            <option value="0"></option>
+                            <option
+                                :value="tracker.id"
+                                v-for="(tracker, index) in trackers"
+                                :key="index"
+                            >
+                                {{ tracker.name }}
+                            </option>
                         </select>
                     </div>
                     <div class="close" @click="$bvModal.hide('modal-accept')">
@@ -91,13 +102,23 @@
                     ok-only
                     ok-title="Готово"
                     id="modal-startup"
-                    @hidden="$router.push({ query })"
+                    ref="startup"
                 >
                     <div class="add-tracker">
                         <div class="tracker">
                             <div class="text">Просмотр стартапа</div>
                             <div class="avatar">
-                                <img :src="activeStartup.photo" alt="" />
+                                <img
+                                    :src="activeStartup.logo"
+                                    v-if="activeStartup.logo"
+                                    alt=""
+                                    class="avatar"
+                                />
+                                <img
+                                    src="/images/defaultStartup.jpg"
+                                    alt=""
+                                    class="avatar"
+                                />
                             </div>
                         </div>
                         <form class="d-flex justify-content-between">
@@ -113,7 +134,7 @@
                                         Кому пренадлежит
                                     </div>
                                     <div class="text-info">
-                                        {{ activeStartup.own }}
+                                        {{ activeStartup.owner }}
                                     </div>
                                 </div>
                                 <div class="description">
@@ -125,7 +146,7 @@
                                 <div class="target">
                                     <div class="text-form">Цели стартапа</div>
                                     <div class="text-info">
-                                        {{ activeStartup.target }}
+                                        {{ activeStartup.points }}
                                     </div>
                                 </div>
                                 <div class="plan-commercial">
@@ -133,13 +154,13 @@
                                         Коммерческий план
                                     </div>
                                     <div class="text-info">
-                                        {{ activeStartup.plancommercial }}
+                                        {{ activeStartup.businessPlan }}
                                     </div>
                                 </div>
                                 <div class="plan-grow">
                                     <div class="text-form">План роста</div>
                                     <div class="text-info">
-                                        {{ activeStartup.planGrow }}
+                                        {{ activeStartup.growthPlan }}
                                     </div>
                                 </div>
                                 <div class="area">
@@ -147,7 +168,7 @@
                                         Область применения
                                     </div>
                                     <div class="text-info">
-                                        {{ activeStartup.area }}
+                                        {{ activeStartup.useArea }}
                                     </div>
                                 </div>
                                 <div class="tasks">
@@ -158,9 +179,20 @@
                                 </div>
                             </div>
                             <div class="block">
-                                <div class="user-block d-flex mb-5">
-                                    <div class="text-form">
-                                        Загруженный файл
+                                <div
+                                    class="mb-5"
+                                    v-for="(
+                                        file, index
+                                    ) in activeStartup.attachments"
+                                    :key="index"
+                                >
+                                    <div class="image">
+                                        <img src="images/file.png" alt="" />
+                                    </div>
+                                    <div class="text-form mt-3">
+                                        <a :href="file.url">{{
+                                            file.originalFilename
+                                        }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -182,54 +214,108 @@
 export default {
     data: function () {
         return {
-            activeStartup: {
-                id: 1,
-                name: "Цифровой баян",
-                photo: "/images/startup1.png",
-                own: "dfsdfd",
-                description: "dsfdsf",
-                target: "sdfsd",
-                plancommercial: "dsfsd",
-                planGrow: "dsfsd",
-                area: "sdfds",
-                tasks: "sfsd",
-            },
-            activeSet: {
-                id: 22,
-                name: "Зимний набор1",
-                photo: "/images/set1.png",
-                description: "vxcvxcvxc",
-                startData: "01.01.2021",
-                endData: "31.03.2021",
-                active: true,
-                startup: [
-                    {
-                        id: 32,
-                        name: "Цифровой баян1",
-                        photo: "/images/startup1.png",
-                        own: "dfsdfd",
-                        description: "dsfdsf",
-                        target: "sdfsd",
-                        plancommercial: "dsfsd",
-                        planGrow: "dsfsd",
-                        area: "sdfds",
-                        tasks: "sfsd",
-                    },
-                    {
-                        id: 12,
-                        name: "Цифровой баян3",
-                        photo: "/images/startup1.png",
-                        own: "dfsdfd",
-                        description: "dsfdsf",
-                        target: "sdfsd",
-                        plancommercial: "dsfsd",
-                        planGrow: "dsfsd",
-                        area: "sdfds",
-                        tasks: "sfsd",
-                    },
-                ],
-            },
+            activeStartup: {},
+            requests: [],
+            activeRequest: {},
+            trackers: [],
+            tracker: { id: null },
         };
+    },
+    async created() {
+        this.requests = await this.$axios.$get(
+            `https://monzun-admin.herokuapp.com/api/requests/${this.$route.params.id}`,
+            {
+                headers: {
+                    Authorization: "Bearer " + this.$cookies.get("token"),
+                },
+            }
+        );
+    },
+    methods: {
+        openStartup(index) {
+            this.activeStartup = this.requests[index].startup;
+            this.$refs["startup"].show();
+        },
+        rejectStartup(id, index) {
+            this.activeRequest = this.requests[index];
+            this.$axios
+                .$post(
+                    `https://monzun-admin.herokuapp.com/api/requests/${id}`,
+                    this.activeRequest,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Стартап отклонен!", {
+                        title: "Отклонение",
+                        variant: "success",
+                    });
+                    this.request.splice(index, 1);
+                })
+                .catch((err) => {
+                    this.$bvToast.toast("ошибка", {
+                        title: "Невозможно отклонить",
+                        variant: "danger",
+                        solid: true,
+                    });
+                });
+        },
+        async acceptStartup(id, index) {
+            try {
+                this.trackers = await this.$axios.$get(
+                    `https://monzun-admin.herokuapp.com/api/trackings/tracker-list`,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                );
+                this.activeRequest = this.requests[index];
+                this.activeStartup = {};
+                this.activeStartup = this.requests[index].startup;
+                this.$refs["acceptStartup"].show();
+            } catch {
+                this.$bvToast.toast("ошибка", {
+                    title: "ошибка",
+                    variant: "danger",
+                    solid: true,
+                });
+            }
+        },
+        accept() {
+            this.$axios
+                .$post(
+                    `https://monzun-admin.herokuapp.com/api/requests/${this.activeRequest.id}/${this.tracker.id}`,
+                    this.activeRequest,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Стартап принят", {
+                        title: "Принять",
+                        variant: "success",
+                    });
+                })
+                .catch((err) => {
+                    this.$bvToast.toast("ошибка", {
+                        title: "Невозможно принять",
+                        variant: "danger",
+                        solid: true,
+                    });
+                });
+        },
+        onChange(event) {
+            this.tracker.id = event.target.value;
+        },
     },
 };
 </script>

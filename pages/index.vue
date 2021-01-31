@@ -32,11 +32,11 @@
                         <form>
                             <div class="name">
                                 <div class="text-form">Имя</div>
-                                <input type="text" v-model="newUser.login" />
+                                <input type="text" v-model="newUser.name" />
                             </div>
                             <div class="telephone">
                                 <div class="text-form">Номер телефона</div>
-                                <input type="tel" v-model="newUser.telephone" />
+                                <input type="tel" v-model="newUser.phone" />
                             </div>
                             <div class="email">
                                 <div class="text-form">Электронная почта</div>
@@ -54,13 +54,18 @@
                     ok-only
                     ok-title="Ок"
                     id="modal-2"
-                    @hidden="$router.push({ query: {} })"
+                    ref="user"
                 >
                     <div class="add-tracker">
                         <div class="tracker">
                             <div class="text">Просмотр</div>
                             <div class="avatar">
-                                <img src="/images/photo.png" alt="" />
+                                <img
+                                    :src="activeUser.logo"
+                                    v-if="activeUser.logo"
+                                    alt=""
+                                />
+                                <img v-else src="images/photo.png" alt="" />
                             </div>
                         </div>
                         <form class="d-flex justify-content-between">
@@ -77,7 +82,7 @@
                                     <div class="text-form">Номер телефона</div>
                                     <input
                                         type="tel"
-                                        v-model="activeUser.telephone"
+                                        v-model="activeUser.phone"
                                         readonly
                                     />
                                 </div>
@@ -101,7 +106,7 @@
                                         <img
                                             src="/images/block.png"
                                             alt=""
-                                            v-if="activeUser.isBlock"
+                                            v-if="activeUser.blocked"
                                         />
                                     </div>
                                 </div>
@@ -114,7 +119,7 @@
                                         id=""
                                         cols="40"
                                         rows="8"
-                                        v-model="activeUser.reasonBlock"
+                                        v-model="activeUser.blockReason"
                                         readonly
                                     ></textarea>
                                 </div>
@@ -130,8 +135,9 @@
                     hide-header
                     ok-title="Изменить"
                     cancel-title="Отмена"
+                    ref="editUser"
                     id="modal-3"
-                    @hidden="$router.push({ query: {} })"
+                    @ok="editUser(activeUser.id)"
                 >
                     <div class="add-tracker">
                         <div class="tracker">
@@ -153,7 +159,7 @@
                                     <div class="text-form">Номер телефона</div>
                                     <input
                                         type="tel"
-                                        v-model="activeUser.telephone"
+                                        v-model="activeUser.phone"
                                     />
                                 </div>
                                 <div class="email">
@@ -174,13 +180,13 @@
                                     <div
                                         class="check-block"
                                         @click="
-                                            activeUser.isBlock = !activeUser.isBlock
+                                            activeUser.blocked = !activeUser.blocked
                                         "
                                     >
                                         <img
                                             src="/images/block.png"
                                             alt=""
-                                            v-if="activeUser.isBlock"
+                                            v-if="activeUser.blocked"
                                         />
                                     </div>
                                 </div>
@@ -193,7 +199,7 @@
                                         id=""
                                         cols="40"
                                         rows="8"
-                                        v-model="activeUser.reasonBlock"
+                                        v-model="activeUser.blockReason"
                                     ></textarea>
                                 </div>
                             </div>
@@ -231,12 +237,14 @@
             <User
                 v-for="(user, index) in users"
                 :key="index"
-                :login="user.login"
-                :photo="user.photo"
+                :login="user.name"
+                :photo="user.logo"
                 :id="user.id"
                 :isBlock="user.isBlock"
                 :reasonBlock="user.reasonBlock"
-                @removeUser="removedUserId = user.id"
+                @getUser="getUser(user.id)"
+                @getUserEdit="getUserEdit(user.id)"
+                @removeUser="removedUserId = index"
             ></User>
         </div>
     </div>
@@ -248,108 +256,212 @@ import Admin from "./admin.vue";
 export default {
     name: "index",
     components: { User },
-    middleware: 'authenticated', 
+    middleware: "authenticated",
     data: function () {
         return {
             removedUserId: "",
-            activeUser: {
-                id: null,
-                name: "fdsfs",
-                login: "dfsfs",
-                photo: "dfsd",
-                telephone: "dsfds",
-                email: "dfsd",
-                isBlock: true,
-                reasonBlock: "egfwegsgvsdvsdvevbewbvs4rh",
-            },
+            activeUser: {},
             newUser: {},
             activeIndex: {},
             files: [],
-            users: [
-                {
-                    id: 1,
-                    name: "Фамилия Имя",
-                    login: "user 1",
-                    photo: "/images/noname.jpg",
-                    telephone: "89226378232",
-                    email: "email@mail.ru",
-                    isBlock: true,
-                    reasonBlock: "dfewfsafsa",
-                },
-                {
-                    id: 2,
-                    name: "Фамилия Имя2",
-                    login: "user 2",
-                    photo: "/images/noname.jpg",
-                    telephone: "89226378232",
-                    email: "email@mail.ru",
-                    isBlock: false,
-                    reasonBlock: "",
-                },
-                {
-                    id: 3,
-                    name: "Фамилия Имя3",
-                    login: "user 3",
-                    photo: "/images/noname.jpg",
-                    telephone: "89226378232",
-                    email: "email@mail.ru",
-                    isBlock: false,
-                    reasonBlock: "",
-                },
-                {
-                    id: 4,
-                    name: "Фамилия Имя4",
-                    login: "user 4",
-                    photo: "/images/noname.jpg",
-                    telephone: "89226378232",
-                    email: "email@mail.ru",
-                    isBlock: true,
-                    reasonBlock: "dfewfsafsa",
-                },
-                {
-                    id: 53,
-                    name: "Фамилия Имя5",
-                    login: "user 5",
-                    photo: "/images/noname.jpg",
-                    telephone: "89226378232",
-                    email: "email@mail.ru",
-                    isBlock: false,
-                    reasonBlock: "",
-                },
-                {
-                    id: 67,
-                    name: "Фамилия Имя6",
-                    login: "user 6",
-                    photo: "/images/noname.jpg",
-                    telephone: "89226378232",
-                    email: "email@mail.ru",
-                    isBlock: false,
-                    reasonBlock: "",
-                },
-            ],
+            users: [],
         };
+    },
+    async created() {
+        this.users = await this.$axios.$get(
+            "https://monzun-admin.herokuapp.com/api/users",
+            {
+                headers: {
+                    Authorization: "Bearer " + this.$cookies.get("token"),
+                },
+            }
+        );
     },
     computed: {
         user() {
-            return this.$store.state.user; 
-        }
+            return this.$store.state.user;
+        },
     },
     methods: {
+        async getUser(id) {
+            try {
+                this.activeUser = await this.$axios.$get(
+                    `https://monzun-admin.herokuapp.com/api/users/${id}`,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                );
+                this.$refs["user"].show();
+            } catch {
+                this.$bvToast.toast(
+                    "Не удалось получить данные пользователя.",
+                    {
+                        title: "пользователь не найден.",
+                        variant: "danger",
+                        solid: true,
+                    }
+                );
+            }
+        },
+        async getUserEdit(id) {
+            try {
+                this.activeUser = await this.$axios.$get(
+                    `https://monzun-admin.herokuapp.com/api/users/${id}`,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                );
+                this.$refs["editUser"].show();
+            } catch {
+                this.$bvToast.toast(
+                    "Не удалось получить данные пользователя.",
+                    {
+                        title: "пользователь не найден.",
+                        variant: "danger",
+                        solid: true,
+                    }
+                );
+            }
+        },
         addUser() {
-            this.users.push(this.newUser);
-            this.newUser = {};
+            this.$axios
+                .$post(
+                    "https://monzun-admin.herokuapp.com/api/users",
+                    this.newUser,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Пользователь добавлен!", {
+                        title: "Добавление пользователя",
+                        variant: "success",
+                    });
+                    this.users.push(response);
+                })
+                .catch((err) => {
+                    if (!this.newUser.name) {
+                        this.$bvToast.toast("ошибка", {
+                            title: "Введите имя пользователя!",
+                            variant: "danger",
+                            solid: true,
+                        });
+                    }
+                    if (!this.newUser.email) {
+                        this.$bvToast.toast("ошибка", {
+                            title: "Укажите электронную почту!",
+                            variant: "danger",
+                            solid: true,
+                        });
+                    } else if (!this.validEmail(this.newUser.email)) {
+                        this.$bvToast.toast("ошибка", {
+                            title:
+                                "Укажите корректный адрес электронной почты!",
+                            variant: "danger",
+                            solid: true,
+                        });
+                    }
+                    if (!this.newUser.phone) {
+                        this.$bvToast.toast("ошибка", {
+                            title: "Укажите номер телефона!",
+                            variant: "danger",
+                            solid: true,
+                        });
+                    } else if (!this.validPhone(this.newUser.phone)) {
+                        this.$bvToast.toast("ошибка", {
+                            title: "Укажите корректный номер телефона!",
+                            variant: "danger",
+                            solid: true,
+                        });
+                    }
+                });
+        },
+        validEmail: function (email) {
+            var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        },
+        validPhone: function (phone) {
+            var re = /^(\+7|7|8)?[\s\-]?\(?[0-9]{3}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+            return re.test(phone);
+        },
+        editUser(id) {
+            this.$axios
+                .$put(
+                    `https://monzun-admin.herokuapp.com/api/users/${id}`,
+                    this.activeUser,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Пользователь изменен!", {
+                        title: "Изменение пользователя",
+                        variant: "success",
+                    });
+                    this.user = {};
+                    this.updateUser();
+                })
+                .catch((err) => {
+                    this.$bvToast.toast("ошибка", {
+                        title: "Не удалось изменить пользователя",
+                        variant: "danger",
+                        solid: true,
+                    });
+                });
+            this.activeUser = {};
         },
         deleteUser(index) {
-            this.users.forEach((value, item) =>
-                value.id == index ? this.users.splice(item, 1) : null
-            );
+            // this.users.forEach((value, item) =>
+            //     value.id == index ? this.users.splice(item, 1) : null
+            // );
+            this.$axios
+                .$delete(
+                    `https://monzun-admin.herokuapp.com/api/users/${this.users[index].id}`,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                )
+                .then((response) => {
+                    this.$bvToast.toast("Пользователь удален!", {
+                        title: "удаление пользователя",
+                        variant: "success",
+                    });
+                    this.users.splice(index, 1);
+                })
+                .catch((err) => {
+                    this.$bvToast.toast("ошибка", {
+                        title: "Не удалось удалить пользователя",
+                        variant: "danger",
+                        solid: true,
+                    });
+                });
             this.removedUserId = "";
         },
-    },
-    async mounted() {
-        this.users = await this.$axios.$get(
-            "https://jsonplaceholder.typicode.com/users"
-        );
+        async updateUser() {
+            this.users = await this.$axios.$get(
+                "https://monzun-admin.herokuapp.com/api/users",
+                {
+                    headers: {
+                        Authorization: "Bearer " + this.$cookies.get("token"),
+                    },
+                }
+            );
+        },
     },
 };
 </script>

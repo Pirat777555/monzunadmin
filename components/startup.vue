@@ -12,13 +12,10 @@
             </div>
             <div class="user-photo">
                 <img :src="photo" v-if="photo" alt="" />
-                <img src="/images/defaultStartup.jpg" alt="" />
+                <img src="images/defaultStartup.jpg" v-if="!photo" alt="" />
             </div>
             <div class="user-login">{{ name }}</div>
-            <b-button
-                class="details"
-                @click="$emit('getStartup')"
-            >
+            <b-button class="details" @click="$emit('getStartup')">
                 Подробнее <img src="images/arrow.svg" alt=""
             /></b-button>
         </div>
@@ -104,6 +101,7 @@ export default {
 .user-photo img {
     text-align: center;
     width: 100%;
+    height: 150px;
 }
 .details {
     font-family: Montserrat;
