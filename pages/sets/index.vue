@@ -163,9 +163,19 @@
                     </div>
                 </div>
                 <form>
-                    <div class="name">
-                        <div class="text-form">Название набора</div>
-                        <input type="text" v-model="activeSet.name" />
+                    <div class="name d-flex justify-content-between">
+                        <div class="name">
+                            <div class="text-form">Название набора</div>
+                            <input type="text" v-model="activeSet.name" />
+                        </div>
+                        <div>
+                            Активен
+                            <input
+                                type="checkbox"
+                                checked
+                                v-model="activeSet.active"
+                            />
+                        </div>
                     </div>
                     <div class="description">
                         <div class="text-form">Описание</div>
@@ -209,6 +219,7 @@ import Set from "~/components/set.vue";
 export default {
     name: "sets",
     components: { Set },
+     middleware: "authenticated",
     data: function () {
         return {
             url: null,

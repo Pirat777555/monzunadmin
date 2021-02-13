@@ -31,7 +31,7 @@
                     <div class="text">Просмотр стартапа</div>
                     <div class="avatar">
                         <img
-                            :src="activeStartup.logo"
+                            :src="activeStartup.logo.url"
                             v-if="activeStartup.logo"
                             alt=""
                         />
@@ -95,17 +95,17 @@
                     </div>
                     <div class="block">
                         <div
-                            class="mb-5"
+                            class="mb- d-flex"
                             v-for="(file, index) in activeStartup.attachments"
                             :key="index"
                         >
                             <div class="image">
-                                <img src="images/file.png" alt="" />
+                                <a :href="file.url" target="_blank"
+                                    ><img src="images/file.png" alt=""
+                                /></a>
                             </div>
                             <div class="text-form mt-3">
-                                <a :href="file.url">{{
-                                    file.originalFilename
-                                }}</a>
+                                {{ file.originalFilename }}
                             </div>
                         </div>
                     </div>
@@ -140,6 +140,7 @@ import Startup from "~/components/startup.vue";
 export default {
     name: "startups",
     components: { Startup },
+    middleware: "authenticated",
     data: function () {
         return {
             removedStartupId: "",

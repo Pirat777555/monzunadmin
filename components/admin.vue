@@ -39,11 +39,6 @@ export default {
             return this.$store.state.user;
         },
     },
-    // methods: {
-    //     getPost() {
-    //         this.user; получить данные user-a  авторизованного пользователля системы
-    //     }
-    // }
 };
 </script>
 <style scoped>

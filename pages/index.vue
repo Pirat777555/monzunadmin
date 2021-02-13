@@ -61,11 +61,15 @@
                             <div class="text">Просмотр</div>
                             <div class="avatar">
                                 <img
-                                    :src="activeUser.logo"
+                                    :src="activeUser.logo.url"
                                     v-if="activeUser.logo"
                                     alt=""
                                 />
-                                <img v-else src="images/photo.png" alt="" />
+                                <img
+                                    v-if="!activeUser.logo"
+                                    src="images/photo.png"
+                                    alt=""
+                                />
                             </div>
                         </div>
                         <form class="d-flex justify-content-between">
@@ -143,7 +147,16 @@
                         <div class="tracker">
                             <div class="text">Редактирование</div>
                             <div class="avatar">
-                                <img src="/images/photo.png" alt="" />
+                                <img
+                                    :src="activeUser.logo.url"
+                                    v-if="activeUser.logo"
+                                    alt=""
+                                />
+                                <img
+                                    v-if="!activeUser.logo"
+                                    src="images/photo.png"
+                                    alt=""
+                                />
                             </div>
                         </div>
                         <form class="d-flex justify-content-between">

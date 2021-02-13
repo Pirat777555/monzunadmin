@@ -267,7 +267,10 @@
                     </div>
                     <div class="choose-tracker">
                         <div class="text">Выберите трекера</div>
-                        <select @change="onChange($event)">
+                        <select
+                            @change="onChange($event)"
+                            :value="activeStartup.id"
+                        >
                             <option value="0"></option>
                             <option
                                 :value="tracker.id"
@@ -288,6 +291,7 @@
 </template>
 <script>
 export default {
+     middleware: "authenticated",
     data: function () {
         return {
             removedStartupId: "",
@@ -381,6 +385,7 @@ export default {
                         },
                     }
                 );
+                console.log(this.activeStartup);
             } catch {
                 this.$bvToast.toast("Не удалось получить данные стартапа.", {
                     title: "Стартап не найден.",
