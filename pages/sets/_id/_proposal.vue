@@ -212,6 +212,7 @@
 
 <script>
 export default {
+    middleware: "authenticated",
     data: function () {
         return {
             activeStartup: {},

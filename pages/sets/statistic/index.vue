@@ -14,6 +14,7 @@
                     />
                     <img
                         src="/images/defaultStartup.jpg"
+                        v-if="!activeStartup.logo"
                         alt=""
                         class="image-set"
                     />
@@ -108,6 +109,7 @@ export default {
                 },
             }
         );
+        console.log(this.activeStartup);
     },
     methods: {
         weekDate(value) {

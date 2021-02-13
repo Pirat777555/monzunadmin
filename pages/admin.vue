@@ -47,6 +47,7 @@ export default {
                     password: this.password,
                 })
                 .then((response) => {
+                    console.log(response);
                     if (response && response.token) {
                         this.$cookies.set("token", response.token);
                         this.$bvToast.toast("Авторизация прошла успешно!", {
@@ -55,9 +56,7 @@ export default {
                         });
 
                         this.$store.dispatch("getUser");
-                        this.$router.push({
-                            name: "index",
-                        });
+                        console.log("cascfsa");
                     }
                 })
                 .catch((err) => {
