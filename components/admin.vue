@@ -1,5 +1,5 @@
 <template>
-    <div class="row admin-panel">
+    <div class="row admin-panel" v-if="user">
         <div class="col-12 admin d-flex">
             <div class="avatar">
                 <img src="/images/avatar.png" alt="" />
