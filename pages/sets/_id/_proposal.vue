@@ -134,7 +134,7 @@
                                         Кому пренадлежит
                                     </div>
                                     <div class="text-info">
-                                        {{ activeStartup.owner }}
+                                        {{ activeStartup.owner.name }}
                                     </div>
                                 </div>
                                 <div class="description">
@@ -215,7 +215,7 @@ export default {
     middleware: "authenticated",
     data: function () {
         return {
-            activeStartup: {},
+            activeStartup: { owner: { name: "" } },
             requests: [],
             activeRequest: {},
             trackers: [],
@@ -305,6 +305,7 @@ export default {
                         title: "Принять",
                         variant: "success",
                     });
+                    this.upload();
                 })
                 .catch((err) => {
                     this.$bvToast.toast("ошибка", {
@@ -313,6 +314,16 @@ export default {
                         solid: true,
                     });
                 });
+        },
+        async upload() {
+            this.requests = await this.$axios.$get(
+                `https://monzun-admin.herokuapp.com/api/requests/${this.$route.params.id}`,
+                {
+                    headers: {
+                        Authorization: "Bearer " + this.$cookies.get("token"),
+                    },
+                }
+            );
         },
         onChange(event) {
             this.tracker.id = event.target.value;

@@ -156,7 +156,7 @@
                                         Кому пренадлежит
                                     </div>
                                     <div class="text-info">
-                                        {{ activeStartup.owner }}
+                                        {{ activeStartup.owner.name }}
                                     </div>
                                 </div>
                                 <div class="description">
@@ -295,7 +295,7 @@ export default {
     data: function () {
         return {
             removedStartupId: "",
-            activeStartup: {},
+            activeStartup: {owner:{name:""}},
             activeSet: {},
             trackers: [],
             tracker: { id: null },
