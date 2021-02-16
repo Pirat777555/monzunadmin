@@ -1,0 +1,1 @@
+__NUXT_JSONP__("/sets/statistic", {data:[{}],fetch:[],mutations:[]});
