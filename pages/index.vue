@@ -67,7 +67,7 @@
                                 />
                                 <img
                                     v-if="!activeUser.logo"
-                                    src="images/photo.png"
+                                    src="images/noname.jpg"
                                     alt=""
                                 />
                             </div>
@@ -154,7 +154,7 @@
                                 />
                                 <img
                                     v-if="!activeUser.logo"
-                                    src="images/photo.png"
+                                    src="images/noname.jpg"
                                     alt=""
                                 />
                             </div>

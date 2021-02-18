@@ -7,7 +7,7 @@
             >
                 <div class="photo">
                     <img
-                        :src="activeStartup.logo"
+                        :src="activeStartup.logo.url"
                         v-if="activeStartup.logo"
                         alt=""
                         class="image-set"
@@ -26,10 +26,10 @@
         </div>
         <div class="row mt-3">
             <div class="col-4">{{ activeStartup.name }}</div>
+            <div class="col-4">Текущая неделя: {{ week }}</div>
             <div class="col-4">
-                Текущая неделя: {{ weekDate(activeStartup.createdAt) }}
+                Итоговая оценка: {{ statistic.avgEstimate }}
             </div>
-            <div class="col-4">Итоговая оценка:</div>
         </div>
         <div class="row mt-3">
             <div class="col-12">
@@ -42,12 +42,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(st, index) in statistic" :key="index">
-                            <td>{{ st.week }}</td>
-                            <td>{{ st.mark }}</td>
+                        <tr v-for="(st, index) in statistic.weeks" :key="index">
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ st.estimate }}</td>
                             <td>
-                                <b-button class="link" v-b-modal.modal-report>
-                                    link</b-button
+                                <span v-if="!st.reportId">Отчёта нет</span>
+                                <b-button
+                                    class="link"
+                                    v-if="st.reportId"
+                                    @click="getReport(st.reportId)"
+                                >
+                                    Отчёт</b-button
                                 >
                             </td>
                         </tr>
@@ -58,18 +63,35 @@
                     hide-header
                     ok-only
                     ok-title="Ок"
+                    ref="report"
                     id="modal-report"
                 >
                     <div class="view-report">
                         <div>
                             <div class="text">Коментарий</div>
-                            <div class="comment">fewrvwedvdsvfewrgvesdv</div>
+                            <div class="comment">
+                                {{ activeReport.comment }}
+                            </div>
                         </div>
                         <div>
-                            <div class="mark mb-5">Оценка: 5 отлично</div>
-                            <div class="file">
-                                <div><img src="/images/file.png" alt="" /></div>
-                                <div><a href="">filename</a></div>
+                            <div class="mark mb-5" v-if="activeReport.estimate">
+                                Оценка: {{ activeReport.estimate.score }}
+                                {{ activeReport.estimate.description }}
+                            </div>
+                            <div
+                                class="file"
+                                v-for="(
+                                    file, index
+                                ) in activeReport.attachments"
+                                :key="index"
+                            >
+                                <a :href="file.url" target="_blank"
+                                    ><img
+                                        src="/images/file.png"
+                                        alt=""
+                                        class="mb-2"
+                                /></a>
+                                {{ file.originalFilename }}
                             </div>
                         </div>
                         <div
@@ -90,6 +112,8 @@ export default {
         return {
             statistic: [],
             activeStartup: {},
+            activeReport: {},
+            week: null,
         };
     },
     async created() {
@@ -109,19 +133,30 @@ export default {
                 },
             }
         );
-        console.log(this.activeStartup);
+        console.log(this.statistic);
+        this.week = this.statistic.weeks.length;
     },
     methods: {
-        weekDate(value) {
-            var date1 = new Date(value);
-            let now = new Date();
-            const entireWeek = Math.ceil(
-                Math.ceil(
-                    Math.abs(now.getTime() - date1.getTime()) /
-                        (1000 * 3600 * 24)
-                ) / 7
-            );
-            return entireWeek;
+        async getReport(id) {
+            try {
+                this.activeReport = await this.$axios.$get(
+                    `https://monzun-admin.herokuapp.com/api/week-reports/${id}`,
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + this.$cookies.get("token"),
+                        },
+                    }
+                );
+                console.log(this.activeReport);
+                this.$refs["report"].show();
+            } catch {
+                this.$bvToast.toast("Не удалось получить данные отчета.", {
+                    title: "отчет не найден",
+                    variant: "danger",
+                    solid: true,
+                });
+            }
         },
     },
 };

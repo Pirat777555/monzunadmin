@@ -58,7 +58,7 @@
                         </div>
                         <div class="avatar">
                             <img
-                                :src="activeStartup.logo"
+                                :src="activeStartup.logo.url"
                                 v-if="activeStartup.logo"
                                 alt=""
                                 class="avatar"
@@ -109,7 +109,7 @@
                             <div class="text">Просмотр стартапа</div>
                             <div class="avatar">
                                 <img
-                                    :src="activeStartup.logo"
+                                    :src="activeStartup.logo.url"
                                     v-if="activeStartup.logo"
                                     alt=""
                                     class="avatar"

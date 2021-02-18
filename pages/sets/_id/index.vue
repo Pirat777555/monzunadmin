@@ -131,7 +131,7 @@
                             <div class="text">Просмотр стартапа</div>
                             <div class="avatar">
                                 <img
-                                    :src="activeStartup.logo"
+                                    :src="activeStartup.logo.url"
                                     v-if="activeStartup.logo"
                                     alt=""
                                     class="avatar"
@@ -291,11 +291,11 @@
 </template>
 <script>
 export default {
-     middleware: "authenticated",
+    middleware: "authenticated",
     data: function () {
         return {
             removedStartupId: "",
-            activeStartup: {owner:{name:""}},
+            activeStartup: { owner: { name: "" } },
             activeSet: {},
             trackers: [],
             tracker: { id: null },

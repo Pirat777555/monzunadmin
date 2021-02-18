@@ -1,8 +1,8 @@
 <template>
-    <div class="row admin-panel" v-if="user">
+    <div class="row admin-panel">
         <div class="col-12 admin d-flex">
             <div class="avatar">
-                <img src="/images/avatar.png" alt="" />
+                <img src="/images/noname.jpg" alt="" />
             </div>
             <div class="name">{{ user.name }}</div>
             <div class="open-toggle">

@@ -23,7 +23,12 @@
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-default">Вход</button>
-                <div class="forgot-password">Забыли пароль?</div>
+                <div
+                    class="forgot-password"
+                    @click="$router.push({ name: 'passwordReset' })"
+                >
+                    Забыли пароль?
+                </div>
             </div>
         </form>
     </div>
